@@ -20,13 +20,17 @@ module.exports = (sequelize, DataTypes) => {
       Spot.hasMany(
         models.Review,
         {
-          foreignKey: 'spotId'
+          foreignKey: 'spotId',
+          onDelete: 'cascade',
+          hooks: true
         }
       )
       Spot.hasMany(
         models.Booking,
         {
-          foreignKey: 'spotId'
+          foreignKey: 'spotId',
+          onDelete: 'cascade',
+          hooks: true
         }
       )
       Spot.hasMany(
@@ -34,6 +38,8 @@ module.exports = (sequelize, DataTypes) => {
         {
           foreignKey: 'imageableId',
           constraints: false,
+          onDelete: 'cascade',
+          hooks: true,
           scope: {
             imageableType: 'spot'
           }
