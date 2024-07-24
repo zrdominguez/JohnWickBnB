@@ -55,9 +55,10 @@ module.exports = (sequelize, DataTypes) => {
     address: {
       type: DataTypes.STRING,
       allowNull: false,
+      unique: true,
       validate: {
-        notNull: { msg: 'Address is required' },
-        notEmpty: { msg: 'Address cannot be empty' },
+        notNull: { msg: 'Street address is required' },
+        notEmpty: { msg: 'Street address is required' },
       },
     },
     city: {
@@ -65,7 +66,15 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       validate: {
         notNull: { msg: 'City is required' },
-        notEmpty: { msg: 'City cannot be empty' },
+        notEmpty: { msg: 'City is required' },
+      }
+    },
+    state: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      validate: {
+        notNull: { msg: 'State is required' },
+        notEmpty: { msg: 'State is required' },
       }
     },
     country: {
@@ -73,23 +82,41 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       validate: {
         notNull: { msg: 'Country is required' },
-        notEmpty: { msg: 'Country cannot be empty' },
+        notEmpty: { msg: 'Country is required' },
       }
     },
     lat: {
       type: DataTypes.DECIMAL,
       allowNull: false,
+      unique: true,
       validate: {
-        notNull: { msg: 'Latitude is required' },
-        isDecimal: { msg: 'Latitude must be a decimal number' },
+        notNull: { msg: 'Latitude must be within -90 and 90' },
+        isDecimal: { msg: 'Latitude must be within -90 and 90' },
+        max : {
+          args: [90],
+          msg: 'Latitude must be within -90 and 90'
+        },
+        min:{
+          args: [-90],
+          msg: 'Latitude must be within -90 and 90'
+        }
       }
     },
     lng: {
       type: DataTypes.DECIMAL,
       allowNull: false,
+      unique: true,
       validate: {
-        notNull: { msg: 'Longitude is required' },
-        isDecimal: { msg: 'Longitude must be a decimal number' },
+        notNull: { msg: 'Longitude must be within -180 and 180' },
+        isDecimal: { msg: 'Longitude must be within -180 and 180' },
+        max : {
+          args: [180],
+          msg: 'Longitude must be within -180 and 180'
+        },
+        min:{
+          args: [-180],
+          msg: 'Longitude must be within -180 and 180'
+        }
       }
     },
     name: {
@@ -97,7 +124,11 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       validate: {
         notNull: { msg: 'Name is required' },
-        notEmpty: { msg: 'Name cannot be empty' },
+        notEmpty: { msg: 'Name is required' },
+        len: {
+          args:[1,50],
+          msg: 'Name must be less than 50 characters'
+        }
       }
     },
     description: {
@@ -105,7 +136,7 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       validate: {
         notNull: { msg: 'Description is required' },
-        notEmpty: { msg: 'Description cannot be empty' },
+        notEmpty: { msg: 'Description is required' },
       }
     },
     price: {
@@ -114,7 +145,10 @@ module.exports = (sequelize, DataTypes) => {
       validate: {
         notNull: { msg: 'Price is required' },
         isInt: { msg: 'Price must be an integer' },
-        min: 0
+        min: {
+          args: [1],
+          msg: 'Price per day must be a positive number'
+        }
       }
     }
   }, {
