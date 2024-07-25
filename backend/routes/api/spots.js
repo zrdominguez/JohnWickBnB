@@ -68,11 +68,13 @@ router.get('/', async (req, res)=>{
     include:[{
       model: Image,
       attributes: [],
+      required: false,
       where:{preview: true}
     },
     {
       model: Review,
       attributes: [],
+      required: false
     }],
     attributes:{
       include:[
@@ -102,6 +104,7 @@ router.post('/',
       price
     } = req.body
     let ownerId;
+
     const { user } = req;
     if (user) ownerId = user.id;
     else next(new Error('Please Login to a valid User'))
@@ -124,6 +127,36 @@ router.post('/',
     await newSpot.save()
 
     res.json(newSpot);
+})
+
+//Get spots of current user
+router.get('/session', async (req, res, next) => {
+  const {user} = req;
+  if(!user) next(new Error('Please Login to a valid User'))
+
+  const userSpots = await Spot.findAll({
+    where:{ownerId: user.id},
+    include:[{
+      model: Image,
+      attributes: [],
+      required: false,
+      where:{preview: true}
+    },
+    {
+      model: Review,
+      attributes: [],
+      required: false
+    }],
+    attributes:{
+      include:[
+        [sequelize.fn('AVG', sequelize.col("Reviews.stars")), "avgRating"],
+        [sequelize.col("Images.url"), "previewImage"]
+      ]
+    },
+    group:["Spot.id"]
+  })
+
+  res.json(userSpots)
 })
 
 module.exports = router;
