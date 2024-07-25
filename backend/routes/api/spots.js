@@ -68,6 +68,7 @@ router.get('/', async (req, res)=>{
     include:[{
       model: Image,
       attributes: [],
+      as: "SpotImages",
       required: false,
       where:{preview: true}
     },
@@ -79,7 +80,7 @@ router.get('/', async (req, res)=>{
     attributes:{
       include:[
         [sequelize.fn('AVG', sequelize.col("Reviews.stars")), "avgRating"],
-        [sequelize.col("Images.url"), "previewImage"]
+        [sequelize.col("SpotImages.url"), "previewImage"]
       ]
     },
     group:["Spot.id"]
@@ -107,7 +108,12 @@ router.post('/',
 
     const { user } = req;
     if (user) ownerId = user.id;
-    else next(new Error('Please Login to a valid User'))
+    else{
+      const error = new Error('Please Login to a valid User');
+      error.status = 401;
+      error.title = 'Unauthorized';
+      return next(error)
+    }
 
     const newSpot = await Spot.build({
       ownerId,
@@ -132,13 +138,19 @@ router.post('/',
 //Get spots of current user
 router.get('/session', async (req, res, next) => {
   const {user} = req;
-  if(!user) next(new Error('Please Login to a valid User'))
+  if(!user){
+    const error = new Error('Please Login to a valid User');
+    error.status = 401;
+    error.title = 'Unauthorized';
+    return next(error);
+  }
 
   const userSpots = await Spot.findAll({
     where:{ownerId: user.id},
     include:[{
       model: Image,
       attributes: [],
+      as: "SpotImages",
       required: false,
       where:{preview: true}
     },
@@ -150,7 +162,7 @@ router.get('/session', async (req, res, next) => {
     attributes:{
       include:[
         [sequelize.fn('AVG', sequelize.col("Reviews.stars")), "avgRating"],
-        [sequelize.col("Images.url"), "previewImage"]
+        [sequelize.col("SpotImages.url"), "previewImage"]
       ]
     },
     group:["Spot.id"]
@@ -158,5 +170,51 @@ router.get('/session', async (req, res, next) => {
 
   res.json(userSpots)
 })
+
+//Get Spot by spotId
+router.get('/:spotId', async (req, res, next) => {
+  const {spotId} = req.params;
+  const spot = await Spot.findByPk(spotId, {
+    include:[{
+      model: Image,
+      attributes: ["id", "url", "preview"],
+      as: "SpotImages",
+      required: false,
+      where:{preview: true}
+    },
+    {
+      model: Review,
+      attributes: [],
+      required: false
+    },
+    {
+      model: User,
+      attributes:["id", "firstName", "lastName"],
+      as: "Owner",
+      required: true
+    }
+  ],
+    attributes:{
+      include:[
+        [sequelize.fn('AVG', sequelize.col("Reviews.stars")), "avgStarRating"],
+        [sequelize.fn('COUNT', sequelize.col("Reviews.id")), "numReviews"],
+      ]
+    },
+    group: ['Spot.id']
+  });
+
+
+  if(!spot){
+    console.log(spot)
+    const error = new Error("Spot couldn't be found")
+    error.status = 404
+    error.title = "Not Found"
+    return next(error);
+  }
+
+  res.json(spot);
+})
+
+
 
 module.exports = router;
