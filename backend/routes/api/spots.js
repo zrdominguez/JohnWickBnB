@@ -6,7 +6,7 @@ const e = require('express');
 
 const router = express.Router();
 
-const validateSpot = [
+const validateNewSpot = [
   check("address")
     .customSanitizer(val=> val.replace(/\s+/g,''))
     .exists({checkFalsy: true})
@@ -60,25 +60,6 @@ const validateSpot = [
     handleValidationErrors
 ]
 
-function checkIfUserIsLoggedIn(req, next){
-  const {user} = req;
-  if(!user){
-    const error = new Error('Please Login to a valid User');
-    error.status = 401;
-    error.title = 'Unauthorized';
-    return next(error);
-  }
-  return user.id
-}
-
-function checkIfSpotExists(spot, next){
-  if(!spot){
-    const error = new Error("Spot couldn't be found")
-    error.status = 404
-    error.title = "Not Found"
-    return next(error);
-  }
-}
 
 //Get all spots
 router.get('/', async (req, res)=>{
@@ -110,7 +91,7 @@ router.get('/', async (req, res)=>{
 
 //Create a spot
 router.post('/',
-  validateSpot,
+  validateNewSpot,
   async (req, res, next) => {
     const {
       address,
@@ -123,8 +104,16 @@ router.post('/',
       description,
       price
     } = req.body
+    let ownerId;
 
-    const ownerId = checkIfUserIsLoggedIn(req, next);
+    const { user } = req;
+    if (user) ownerId = user.id;
+    else{
+      const error = new Error('Please Login to a valid User');
+      error.status = 401;
+      error.title = 'Unauthorized';
+      return next(error)
+    }
 
     const newSpot = await Spot.build({
       ownerId,
@@ -148,10 +137,16 @@ router.post('/',
 
 //Get spots of current user
 router.get('/session', async (req, res, next) => {
-  const ownerId = checkIfUserIsLoggedIn(req, next);
+  const {user} = req;
+  if(!user){
+    const error = new Error('Please Login to a valid User');
+    error.status = 401;
+    error.title = 'Unauthorized';
+    return next(error);
+  }
 
   const userSpots = await Spot.findAll({
-    where:{ownerId: ownerId},
+    where:{ownerId: user.id},
     include:[{
       model: Image,
       attributes: [],
@@ -208,32 +203,18 @@ router.get('/:spotId', async (req, res, next) => {
     group: ['Spot.id']
   });
 
-  checkIfSpotExists(spot, next);
+
+  if(!spot){
+    console.log(spot)
+    const error = new Error("Spot couldn't be found")
+    error.status = 404
+    error.title = "Not Found"
+    return next(error);
+  }
 
   res.json(spot);
 })
 
-//Delete Spot
-router.delete('/:spotId', async (req, res, next) => {
-  try{
-  const ownerId = checkIfUserIsLoggedIn(req, next);
 
-  const {spotId} = req.params;
-  const deletedSpot = await Spot.findOne({
-    where:{
-      id: spotId,
-      ownerId: ownerId
-    }
-  });
-
-  checkIfSpotExists(deletedSpot, next);
-
-  await deletedSpot.destroy();
-
-  res.json({message: 'Successfully deleted'})
-  }catch(err){
-    console.error(err)
-  }
-})
 
 module.exports = router;
