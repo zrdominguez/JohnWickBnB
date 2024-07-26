@@ -63,7 +63,7 @@ router.post(
     };
 
     await setTokenCookie(res, safeUser);
-
+    res.status(201)
     return res.json({
       user: safeUser
     });
