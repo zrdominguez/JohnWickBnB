@@ -60,6 +60,21 @@ const validateNewSpot = [
     handleValidationErrors
 ]
 
+const validateNewImage = [
+  check("url")
+    .exists({checkFalsy: true})
+    .notEmpty()
+    .isString()
+    .isURL()
+    .withMessage("Must be a valid URL"),
+  check("preview")
+    .exists()
+    .notEmpty()
+    .isBoolean()
+    .withMessage("value must be true or false"),
+    handleValidationErrors
+]
+
 function checkIfUserIsLoggedIn(req, next){
   const {user} = req;
   if(!user){
@@ -140,7 +155,7 @@ router.post('/',
     })
 
     await newSpot.validate()
-
+    res.status(201)
     await newSpot.save()
 
     res.json(newSpot);
@@ -232,5 +247,35 @@ router.delete('/:spotId', async (req, res, next) => {
 
   res.json({message: 'Successfully deleted'})
 })
+
+//add Image to Spot
+router.post('/:spotId/images',
+  validateNewImage,
+  async (req, res, next) => {
+
+    const ownerId = checkIfUserIsLoggedIn(req, next);
+    const {spotId} = req.params;
+    const spot = await Spot.findOne({
+      where:{
+        id: spotId,
+        ownerId: ownerId
+      }
+    });
+
+    checkIfSpotExists(spot, next)
+    const {url, preview} = req.body
+    const newImage = await Image.build({
+      imageableType: 'spot',
+      imageableId: spotId,
+      url: url,
+      preview: preview
+    })
+
+    await newImage.validate();
+    res.status(201)
+    await newImage.save()
+
+    res.json({id: newImage.id, url, preview})
+  })
 
 module.exports = router;
