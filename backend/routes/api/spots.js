@@ -75,23 +75,23 @@ const validateNewImage = [
     handleValidationErrors
 ]
 
-function checkIfUserIsLoggedIn(req, next){
+function checkIfUserIsLoggedIn(req){
   const {user} = req;
   if(!user){
     const error = new Error('Please Login to a valid User');
     error.status = 401;
     error.title = 'Unauthorized';
-    return next(error);
+    return error;
   }
   return user.id
 }
 
-function checkIfSpotExists(spot, next){
+function checkIfSpotExists(spot){
   if(!spot){
     const error = new Error("Spot couldn't be found")
     error.status = 404
     error.title = "Not Found"
-    return next(error);
+    return error;
   }
 }
 
@@ -139,7 +139,8 @@ router.post('/',
       price
     } = req.body
 
-    const ownerId = checkIfUserIsLoggedIn(req, next);
+    const ownerId = await checkIfUserIsLoggedIn(req);
+    if(typeof ownerId == 'object') return next(ownerId);
 
     const newSpot = await Spot.build({
       ownerId,
@@ -163,7 +164,8 @@ router.post('/',
 
 //Get spots of current user
 router.get('/session', async (req, res, next) => {
-  const ownerId = checkIfUserIsLoggedIn(req, next)
+  const ownerId = await checkIfUserIsLoggedIn(req)
+  if(typeof ownerId == 'object') return next(ownerId);
 
   const userSpots = await Spot.findAll({
     where:{ownerId: ownerId},
@@ -223,7 +225,8 @@ router.get('/:spotId', async (req, res, next) => {
     group: ['Spot.id']
   });
 
-  checkIfSpotExists(spot, next)
+  const checkSpot = checkIfSpotExists(spot);
+  if(checkSpot) return next(checkSpot);
 
   res.json(spot);
 })
@@ -231,7 +234,9 @@ router.get('/:spotId', async (req, res, next) => {
 //Delete Spot
 router.delete('/:spotId', async (req, res, next) => {
 
-  const ownerId = checkIfUserIsLoggedIn(req, next);
+  const ownerId = await checkIfUserIsLoggedIn(req);
+  if(typeof ownerId == 'object') return next(ownerId);
+
 
   const {spotId} = req.params;
   const deletedSpot = await Spot.findOne({
@@ -241,7 +246,8 @@ router.delete('/:spotId', async (req, res, next) => {
     }
   });
 
-  checkIfSpotExists(deletedSpot, next);
+  const checkSpot = checkIfSpotExists(deletedSpot);
+  if(checkSpot) return next(checkSpot);
 
   await deletedSpot.destroy();
 
@@ -253,7 +259,9 @@ router.post('/:spotId/images',
   validateNewImage,
   async (req, res, next) => {
 
-    const ownerId = checkIfUserIsLoggedIn(req, next);
+    const ownerId = await checkIfUserIsLoggedIn(req);
+    if(typeof ownerId == 'object') return next(ownerId);
+
     const {spotId} = req.params;
     const spot = await Spot.findOne({
       where:{
@@ -262,7 +270,9 @@ router.post('/:spotId/images',
       }
     });
 
-    checkIfSpotExists(spot, next)
+    const checkSpot = checkIfSpotExists(spot);
+    if(checkSpot) return next(checkSpot)
+
     const {url, preview} = req.body
     const newImage = await Image.build({
       imageableType: 'spot',
