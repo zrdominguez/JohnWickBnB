@@ -6,29 +6,29 @@ const e = require('express');
 
 const router = express.Router();
 
-const validateNewSpot = [
+const validateSpot = [
   check("address")
-    .customSanitizer(val=> val.replace(/\s+/g,''))
     .exists({checkFalsy: true})
     .notEmpty()
+    .customSanitizer(val => val ? val.replace(/\s+/g,'') : null)
     .isAlphanumeric()
     .withMessage('Street address is required'),
   check('city')
-  .customSanitizer(val=> val.replace(/\s+/g,''))
     .exists({checkFalsy: true})
     .notEmpty()
+    .customSanitizer(val=> val ? val.replace(/\s+/g,'') : null)
     .isAlpha()
     .withMessage('City is required'),
   check('state')
-    .customSanitizer(val=> val.replace(/\s+/g,''))
     .exists({checkFalsy: true})
     .notEmpty()
+    .customSanitizer(val=> val ? val.replace(/\s+/g,'') : null)
     .isAlpha()
     .withMessage('State is required'),
   check('country')
-    .customSanitizer(val=> val.replace(/\s+/g,''))
     .exists({checkFalsy: true})
     .notEmpty()
+    .customSanitizer(val=> val ? val.replace(/\s+/g,'') : null)
     .isAlpha()
     .withMessage('Country is required'),
   check('lat')
@@ -125,7 +125,7 @@ router.get('/', async (req, res)=>{
 
 //Create a spot
 router.post('/',
-  validateNewSpot,
+  validateSpot,
   async (req, res, next) => {
     const {
       address,
@@ -254,7 +254,7 @@ router.delete('/:spotId', async (req, res, next) => {
   res.json({message: 'Successfully deleted'})
 })
 
-//add Image to Spot
+//Add Image to Spot
 router.post('/:spotId/images',
   validateNewImage,
   async (req, res, next) => {
@@ -286,6 +286,32 @@ router.post('/:spotId/images',
     await newImage.save()
 
     res.json({id: newImage.id, url, preview})
+  })
+
+  //Edit Spot
+  router.put('/:spotId',
+    validateSpot,
+    async (req, res, next) => {
+    const ownerId = await checkIfUserIsLoggedIn(req);
+    if(typeof ownerId == 'object') return next(ownerId);
+
+    const {spotId} = req.params;
+
+    const spot = await Spot.findOne({
+      where:{
+        id: spotId,
+        ownerId: ownerId
+      },
+    });
+
+    const checkSpot = checkIfSpotExists(spot);
+    if(checkSpot) return next(checkSpot);
+
+    await spot.update(req.body);
+
+    res.status(201)
+
+    res.json(spot)
   })
 
 module.exports = router;
