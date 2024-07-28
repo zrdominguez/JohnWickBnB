@@ -22,6 +22,14 @@ module.exports = {
         updatedAt: new Date()
       },
       {
+        userId: 1,
+        spotId: 2,
+        review: 'It was not what I expected, but it was good enough.',
+        stars: 3,
+        createdAt: new Date(),
+        updatedAt: new Date()
+      },
+      {
         userId: 2,
         spotId: 2,
         review: 'Nice location but a bit noisy.',
