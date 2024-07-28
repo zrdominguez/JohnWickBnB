@@ -1,7 +1,7 @@
 const express = require('express');
 const { Spot, User, Image, Review, sequelize } = require('../../db/models');
 const { check } = require('express-validator');
-const { handleValidationErrors } = require('../../utils/validation');
+const { handleValidationErrors, checkIfUserIsLoggedIn } = require('../../utils/validation');
 const e = require('express');
 
 const router = express.Router();
@@ -74,17 +74,6 @@ const validateNewImage = [
     .withMessage("value must be true or false"),
     handleValidationErrors
 ]
-
-function checkIfUserIsLoggedIn(req){
-  const {user} = req;
-  if(!user){
-    const error = new Error('Please Login to a valid User');
-    error.status = 401;
-    error.title = 'Unauthorized';
-    return error;
-  }
-  return user.id
-}
 
 function checkIfSpotExists(spot){
   if(!spot){

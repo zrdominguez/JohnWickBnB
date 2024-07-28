@@ -20,6 +20,18 @@ const handleValidationErrors = (req, _res, next) => {
   next();
 };
 
+function checkIfUserIsLoggedIn(req){
+  const {user} = req;
+  if(!user){
+    const error = new Error('Please Login to a valid User');
+    error.status = 401;
+    error.title = 'Unauthorized';
+    return error;
+  }
+  return user.id
+}
+
 module.exports = {
-  handleValidationErrors
+  handleValidationErrors,
+  checkIfUserIsLoggedIn
 };
