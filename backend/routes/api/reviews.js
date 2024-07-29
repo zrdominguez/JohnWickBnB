@@ -1,19 +1,18 @@
 const express = require('express');
 const { Spot, User, Image, Review, sequelize } = require('../../db/models');
 const { check } = require('express-validator');
-const { handleValidationErrors, checkIfUserIsLoggedIn } = require('../../utils/validation');
-const e = require('express');
-const { where } = require('sequelize');
-const review = require('../../db/models/review');
+const { handleValidationErrors } = require('../../utils/validation');
+const {requireAuth} = require('../../utils/auth');
 
 const router = express.Router();
 
-router.get('/session', async (req, res, next) => {
-  const userId = checkIfUserIsLoggedIn(req);
-  if(typeof userId == 'object') return next(userId);
+router.get('/session',
+  requireAuth,
+  async (req, res) => {
+  const {id} = req.user;
 
   const userReviews = await Review.findAll({
-    where:{userId : userId},
+    where:{userId : id},
     include:[
       {
         model: User,
@@ -43,7 +42,7 @@ router.get('/session', async (req, res, next) => {
         required: false,
       }
     ],
-    group:["Review.id"]
+    group:["Review.id", "ReviewImages.id"]
   })
 
   const Reviews = await Promise.all(
