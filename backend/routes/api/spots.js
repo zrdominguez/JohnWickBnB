@@ -84,6 +84,35 @@ function checkIfSpotExists(spot){
   }
 }
 
+//Get all Reviews by spotId
+router.get('/:spotId/reviews', async (req, res, next) => {
+  const {spotId} = req.params
+  const spot = await Spot.findByPk(spotId)
+
+  const checkSpot = checkIfSpotExists(spot)
+  if(checkSpot) return next(checkSpot)
+
+  const Reviews = await Review.findAll({
+    where: {spotId: spotId},
+    include:[
+      {
+        model: User,
+        attributes:['id', 'firstName', 'lastName'],
+        required: true
+      },
+      {
+        model: Image,
+        as: "ReviewImages",
+        attributes: ['id', 'url'],
+        required: false,
+      }
+    ],
+    group:["Review.id", "ReviewImages.id"]
+    })
+
+    res.json({Reviews})
+  })
+
 //Add Image to Spot
 router.post('/:spotId/images',
   validateNewImage,
@@ -144,7 +173,7 @@ router.post('/:spotId/images',
     res.json(spot)
   })
 
-  //Get spots of current user
+//Get spots of current user
 router.get('/session', async (req, res, next) => {
   const ownerId = await checkIfUserIsLoggedIn(req)
   if(typeof ownerId == 'object') return next(ownerId);
@@ -173,34 +202,6 @@ router.get('/session', async (req, res, next) => {
   })
 
   res.json(userSpots)
-})
-
-//Get all spots
-router.get('/', async (req, res)=>{
-
-  const allSpots = await Spot.findAll({
-    include:[{
-      model: Image,
-      attributes: [],
-      as: "SpotImages",
-      required: false,
-      where:{preview: true}
-    },
-    {
-      model: Review,
-      attributes: [],
-      required: false
-    }],
-    attributes:{
-      include:[
-        [sequelize.fn('AVG', sequelize.col("Reviews.stars")), "avgRating"],
-        [sequelize.col("SpotImages.url"), "previewImage"]
-      ]
-    },
-    group:["Spot.id"]
-  });
-
-  res.json(allSpots);
 })
 
 //Get Spot by spotId
@@ -262,6 +263,34 @@ router.delete('/:spotId', async (req, res, next) => {
   await deletedSpot.destroy();
 
   res.json({message: 'Successfully deleted'})
+})
+
+//Get all spots
+router.get('/', async (req, res)=>{
+
+  const allSpots = await Spot.findAll({
+    include:[{
+      model: Image,
+      attributes: [],
+      as: "SpotImages",
+      required: false,
+      where:{preview: true}
+    },
+    {
+      model: Review,
+      attributes: [],
+      required: false
+    }],
+    attributes:{
+      include:[
+        [sequelize.fn('AVG', sequelize.col("Reviews.stars")), "avgRating"],
+        [sequelize.col("SpotImages.url"), "previewImage"]
+      ]
+    },
+    group:["Spot.id"]
+  });
+
+  res.json(allSpots);
 })
 
 //Create a spot
