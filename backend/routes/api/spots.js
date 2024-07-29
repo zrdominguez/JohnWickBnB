@@ -117,12 +117,7 @@ async (req, res, next) => {
     }
   })
 
-  if(existingReview){
-    const error = new Error("User already has a review for this spot");
-    error.status = 403;
-    error.title = "Forbidden"
-    return next(error)
-  }
+  if(existingReview) return next (new Error("User already has a review for this spot"));
 
   const {review, stars} = req.body;
 
