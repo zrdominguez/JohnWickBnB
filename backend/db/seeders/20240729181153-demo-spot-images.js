@@ -12,42 +12,37 @@ module.exports = {
      *   isBetaMember: false
      * }], {});
     */
-    await queryInterface.bulkInsert('Images', [
+    await queryInterface.bulkInsert('spotImages', [
       {
-        imageableType: 'spot',
-        imageableId: 1,
-        url: 'https://example.com/images/cozy-apartment.jpg',
+        url: 'https://example.com/image1.jpg',
         preview: true,
+        spotId: 1,
         createdAt: new Date(),
-        updatedAt: new Date()
+        updatedAt: new Date(),
       },
       {
-        imageableType: 'spot',
-        imageableId: 2,
-        url: 'https://example.com/images/modern-condo.jpg',
+        url: 'https://example.com/image2.jpg',
+        preview: false,
+        spotId: 1,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      },
+      {
+        url: 'https://example.com/image3.jpg',
         preview: true,
+        spotId: 2,
         createdAt: new Date(),
-        updatedAt: new Date()
+        updatedAt: new Date(),
       },
       {
-        imageableType: 'review',
-        imageableId: 1,
-        url: 'https://example.com/images/review-1.jpg',
+        url: 'https://example.com/image4.jpg',
         preview: false,
+        spotId: 2,
         createdAt: new Date(),
-        updatedAt: new Date()
+        updatedAt: new Date(),
       },
-      {
-        imageableType: 'review',
-        imageableId: 2,
-        url: 'https://example.com/images/review-2.jpg',
-        preview: false,
-        createdAt: new Date(),
-        updatedAt: new Date()
-      }
     ], {});
   },
-
   async down (queryInterface, Sequelize) {
     /**
      * Add commands to revert seed here.
@@ -55,6 +50,6 @@ module.exports = {
      * Example:
      * await queryInterface.bulkDelete('People', null, {});
      */
-    await queryInterface.bulkDelete('Images', null, {});
+    await queryInterface.bulkDelete('spotImages', null, {});
   }
 };

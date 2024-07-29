@@ -1,5 +1,5 @@
 const express = require('express');
-const { Spot, User, Image, Review, sequelize } = require('../../db/models');
+const { Spot, User, spotImage, Review, sequelize } = require('../../db/models');
 const { check } = require('express-validator');
 const { handleValidationErrors, checkIfUserIsLoggedIn } = require('../../utils/validation');
 const e = require('express');
@@ -60,7 +60,7 @@ const validateSpot = [
     handleValidationErrors
 ]
 
-const validateNewImage = [
+const validateNewSpotImage = [
   check("url")
     .exists({checkFalsy: true})
     .notEmpty()
@@ -89,7 +89,7 @@ router.get('/', async (req, res)=>{
 
   const allSpots = await Spot.findAll({
     include:[{
-      model: Image,
+      model: spotImage,
       attributes: [],
       as: "SpotImages",
       required: false,
@@ -159,7 +159,7 @@ router.get('/session', async (req, res, next) => {
   const userSpots = await Spot.findAll({
     where:{ownerId: ownerId},
     include:[{
-      model: Image,
+      model: spotImage,
       attributes: [],
       as: "SpotImages",
       required: false,
@@ -187,11 +187,10 @@ router.get('/:spotId', async (req, res, next) => {
   const {spotId} = req.params;
   const spot = await Spot.findByPk(spotId, {
     include:[{
-      model: Image,
+      model: spotImage,
       attributes: ["id", "url", "preview"],
       as: "SpotImages",
       required: false,
-      where:{preview: true}
     },
     {
       model: Review,
@@ -211,7 +210,7 @@ router.get('/:spotId', async (req, res, next) => {
         [sequelize.fn('COUNT', sequelize.col("Reviews.id")), "numReviews"],
       ]
     },
-    group: ['Spot.id']
+    group: ['Spot.id','SpotImages.id']
   });
 
   const checkSpot = checkIfSpotExists(spot);
@@ -245,7 +244,7 @@ router.delete('/:spotId', async (req, res, next) => {
 
 //Add Image to Spot
 router.post('/:spotId/images',
-  validateNewImage,
+  validateNewSpotImage,
   async (req, res, next) => {
 
     const ownerId = await checkIfUserIsLoggedIn(req);
@@ -263,9 +262,8 @@ router.post('/:spotId/images',
     if(checkSpot) return next(checkSpot)
 
     const {url, preview} = req.body
-    const newImage = await Image.build({
-      imageableType: 'spot',
-      imageableId: spotId,
+    const newImage = await spotImage.build({
+      spotId: spotId,
       url: url,
       preview: preview
     })

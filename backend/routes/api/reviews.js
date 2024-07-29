@@ -1,5 +1,5 @@
 const express = require('express');
-const { Spot, User, Image, Review, sequelize } = require('../../db/models');
+const { Spot, User, reviewImage, spotImage, Review, sequelize } = require('../../db/models');
 const { check } = require('express-validator');
 const { handleValidationErrors, checkIfUserIsLoggedIn } = require('../../utils/validation');
 const e = require('express');
@@ -23,7 +23,7 @@ router.get('/session', async (req, res, next) => {
         model: Spot,
         include:[
           {
-            model: Image,
+            model: spotImage,
             as: "SpotImages",
             attributes:["url"],
             required: false,
@@ -32,12 +32,11 @@ router.get('/session', async (req, res, next) => {
         ],
         required: true,
         attributes: {
-          //include:[[sequelize.col("SpotImages.url"), "previewImage"]],
           exclude: ['createdAt', 'updatedAt', 'description']
         },
       },
       {
-        model: Image,
+        model: reviewImage,
         as: "ReviewImages",
         attributes:["id", "url"],
         required: false,

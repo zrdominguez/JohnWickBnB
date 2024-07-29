@@ -2,43 +2,36 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('Images', {
+    await queryInterface.createTable('reviewImages', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      imageableType: {
-        type: Sequelize.ENUM,
-        values: ['spot', 'review'],
-        allowNull: false
-      },
-      imageableId: {
-        type: Sequelize.INTEGER,
-        allowNull: false
-      },
       url: {
         type: Sequelize.STRING,
         allowNull: false
       },
-      preview: {
-        type: Sequelize.BOOLEAN,
-        allowNull: false
+      reviewId: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        references: {model: "Reviews"},
+        onDelete: "CASCADE"
       },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE,
-        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP')
+        defaultValue: Sequelize.literal("CURRENT_TIMESTAMP")
       },
       updatedAt: {
         allowNull: false,
         type: Sequelize.DATE,
-        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP')
+        defaultValue: Sequelize.literal("CURRENT_TIMESTAMP")
       }
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('Images');
+    await queryInterface.dropTable('reviewImages');
   }
 };
