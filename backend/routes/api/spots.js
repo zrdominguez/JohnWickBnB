@@ -84,74 +84,67 @@ function checkIfSpotExists(spot){
   }
 }
 
-//Get all spots
-router.get('/', async (req, res)=>{
-
-  const allSpots = await Spot.findAll({
-    include:[{
-      model: Image,
-      attributes: [],
-      as: "SpotImages",
-      required: false,
-      where:{preview: true}
-    },
-    {
-      model: Review,
-      attributes: [],
-      required: false
-    }],
-    attributes:{
-      include:[
-        [sequelize.fn('AVG', sequelize.col("Reviews.stars")), "avgRating"],
-        [sequelize.col("SpotImages.url"), "previewImage"]
-      ]
-    },
-    group:["Spot.id"]
-  });
-
-  res.json(allSpots);
-})
-
-//Create a spot
-router.post('/',
-  validateSpot,
+//Add Image to Spot
+router.post('/:spotId/images',
+  validateNewImage,
   async (req, res, next) => {
-    const {
-      address,
-      city,
-      state,
-      country,
-      lat,
-      lng,
-      name,
-      description,
-      price
-    } = req.body
 
     const ownerId = await checkIfUserIsLoggedIn(req);
     if(typeof ownerId == 'object') return next(ownerId);
 
-    const newSpot = await Spot.build({
-      ownerId,
-      address,
-      city,
-      state,
-      country,
-      lat,
-      lng,
-      name,
-      description,
-      price
+    const {spotId} = req.params;
+    const spot = await Spot.findOne({
+      where:{
+        id: spotId,
+        ownerId: ownerId
+      }
+    });
+
+    const checkSpot = checkIfSpotExists(spot);
+    if(checkSpot) return next(checkSpot)
+
+    const {url, preview} = req.body
+    const newImage = await Image.build({
+      imageableType: 'spot',
+      imageableId: spotId,
+      url: url,
+      preview: preview
     })
 
-    await newSpot.validate()
+    await newImage.validate();
     res.status(201)
-    await newSpot.save()
+    await newImage.save()
 
-    res.json(newSpot);
-})
+    res.json({id: newImage.id, url, preview})
+  })
 
-//Get spots of current user
+  //Edit Spot
+  router.put('/:spotId',
+    validateSpot,
+    async (req, res, next) => {
+    const ownerId = await checkIfUserIsLoggedIn(req);
+    if(typeof ownerId == 'object') return next(ownerId);
+
+    const {spotId} = req.params;
+
+    const spot = await Spot.findOne({
+      where:{
+        id: spotId,
+        ownerId: ownerId
+      },
+    });
+
+    const checkSpot = checkIfSpotExists(spot);
+    if(checkSpot) return next(checkSpot);
+
+    await spot.update(req.body);
+
+    res.status(201)
+
+    res.json(spot)
+  })
+
+  //Get spots of current user
 router.get('/session', async (req, res, next) => {
   const ownerId = await checkIfUserIsLoggedIn(req)
   if(typeof ownerId == 'object') return next(ownerId);
@@ -180,6 +173,34 @@ router.get('/session', async (req, res, next) => {
   })
 
   res.json(userSpots)
+})
+
+//Get all spots
+router.get('/', async (req, res)=>{
+
+  const allSpots = await Spot.findAll({
+    include:[{
+      model: Image,
+      attributes: [],
+      as: "SpotImages",
+      required: false,
+      where:{preview: true}
+    },
+    {
+      model: Review,
+      attributes: [],
+      required: false
+    }],
+    attributes:{
+      include:[
+        [sequelize.fn('AVG', sequelize.col("Reviews.stars")), "avgRating"],
+        [sequelize.col("SpotImages.url"), "previewImage"]
+      ]
+    },
+    group:["Spot.id"]
+  });
+
+  res.json(allSpots);
 })
 
 //Get Spot by spotId
@@ -243,64 +264,43 @@ router.delete('/:spotId', async (req, res, next) => {
   res.json({message: 'Successfully deleted'})
 })
 
-//Add Image to Spot
-router.post('/:spotId/images',
-  validateNewImage,
+//Create a spot
+router.post('/',
+  validateSpot,
   async (req, res, next) => {
+    const {
+      address,
+      city,
+      state,
+      country,
+      lat,
+      lng,
+      name,
+      description,
+      price
+    } = req.body
 
     const ownerId = await checkIfUserIsLoggedIn(req);
     if(typeof ownerId == 'object') return next(ownerId);
 
-    const {spotId} = req.params;
-    const spot = await Spot.findOne({
-      where:{
-        id: spotId,
-        ownerId: ownerId
-      }
-    });
-
-    const checkSpot = checkIfSpotExists(spot);
-    if(checkSpot) return next(checkSpot)
-
-    const {url, preview} = req.body
-    const newImage = await Image.build({
-      imageableType: 'spot',
-      imageableId: spotId,
-      url: url,
-      preview: preview
+    const newSpot = await Spot.build({
+      ownerId,
+      address,
+      city,
+      state,
+      country,
+      lat,
+      lng,
+      name,
+      description,
+      price
     })
 
-    await newImage.validate();
+    await newSpot.validate()
     res.status(201)
-    await newImage.save()
+    await newSpot.save()
 
-    res.json({id: newImage.id, url, preview})
-  })
-
-  //Edit Spot
-  router.put('/:spotId',
-    validateSpot,
-    async (req, res, next) => {
-    const ownerId = await checkIfUserIsLoggedIn(req);
-    if(typeof ownerId == 'object') return next(ownerId);
-
-    const {spotId} = req.params;
-
-    const spot = await Spot.findOne({
-      where:{
-        id: spotId,
-        ownerId: ownerId
-      },
-    });
-
-    const checkSpot = checkIfSpotExists(spot);
-    if(checkSpot) return next(checkSpot);
-
-    await spot.update(req.body);
-
-    res.status(201)
-
-    res.json(spot)
-  })
+    res.json(newSpot);
+})
 
 module.exports = router;
