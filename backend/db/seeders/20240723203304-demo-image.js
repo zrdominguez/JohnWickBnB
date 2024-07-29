@@ -39,8 +39,24 @@ module.exports = {
       },
       {
         imageableType: 'review',
+        imageableId: 1,
+        url: 'https://example.com/images/cool-review-1.jpg',
+        preview: false,
+        createdAt: new Date(),
+        updatedAt: new Date()
+      },
+      {
+        imageableType: 'review',
         imageableId: 2,
         url: 'https://example.com/images/review-2.jpg',
+        preview: false,
+        createdAt: new Date(),
+        updatedAt: new Date()
+      },
+      {
+        imageableType: 'review',
+        imageableId: 3,
+        url: 'https://example.com/images/ok-review-1.jpg',
         preview: false,
         createdAt: new Date(),
         updatedAt: new Date()
