@@ -17,7 +17,21 @@ const validateNewReviewImage = [
   handleValidationErrors
 ];
 
-function checkIfReviewExists(review){
+const validateNewReview =[
+  check('review')
+    .exists({checkFalsy: true})
+    .notEmpty()
+    .isString()
+    .withMessage("Review text is required"),
+  check('stars')
+    .exists({checkFalsy: true})
+    .notEmpty()
+    .isInt({min: 1, max: 5})
+    .withMessage('Stars must be an integer from 1 to 5'),
+  handleValidationErrors
+]
+
+const checkIfReviewExists = (review) =>{
   if(!review){
     const error = new Error("Review couldn't be found");
     error.status = 404;
@@ -72,7 +86,7 @@ router.post('/:reviewId/images',
     })
 
     res.json({id: newImage.id, url: newImage.url})
-  })
+})
 
 //Get reviews of current User
 router.get('/session',
@@ -126,4 +140,20 @@ router.get('/session',
 
   res.json({Reviews: formatedReviews});
 })
+
+//Edit Review
+router.put("/:reviewId",
+  validateNewReview,
+  requireAuth,
+  async (req, res, next) => {
+    const {reviewId} = req.params;
+    const review = await Review.findByPk(reviewId);
+    const checkReview = checkIfReviewExists(review);
+    if(checkReview) return next(checkReview);
+
+    await review.update(req.body);
+
+    res.json(review)
+  })
+
 module.exports = router;
