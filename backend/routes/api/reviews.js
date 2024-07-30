@@ -131,10 +131,12 @@ router.get('/session',
   const formatedReviews = await Promise.all(
     userReviews.map(async (review) => {
       const spot = review.Spot;
+
       if(spot.SpotImages.length > 0){
         spot.dataValues["previewImage"] = spot.SpotImages[0].url
         delete spot.dataValues.SpotImages;
       }
+
       return review
   }))
 
@@ -147,13 +149,38 @@ router.put("/:reviewId",
   requireAuth,
   async (req, res, next) => {
     const {reviewId} = req.params;
+
     const review = await Review.findByPk(reviewId);
+
     const checkReview = checkIfReviewExists(review);
     if(checkReview) return next(checkReview);
 
     await review.update(req.body);
 
     res.json(review)
+  })
+
+//Delete Review
+router.delete("/:reviewId",
+  requireAuth,
+  async (req, res, next) => {
+    const {id} = req.user
+    const {reviewId} = req.params;
+
+    const review = await Review.findOne({
+      where:{
+        userId: id,
+        id: reviewId
+      }
+    });
+
+    //error handling to make sure user owns the review and if it exists
+    const checkReview = checkIfReviewExists(review);
+    if(checkReview) return next(checkReview);
+
+    await review.destroy()
+
+    res.json({message: "Successfully deleted"})
   })
 
 module.exports = router;
