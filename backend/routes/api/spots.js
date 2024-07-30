@@ -60,7 +60,7 @@ const validateSpot = [
     handleValidationErrors
 ]
 
-const validateNewImage = [
+const validateNewSpotImage = [
   check("url")
     .exists({checkFalsy: true})
     .notEmpty()
@@ -165,7 +165,7 @@ router.get('/:spotId/reviews', async (req, res, next) => {
 
 //Add Image to Spot
 router.post('/:spotId/images',
-  validateNewImage,
+  validateNewSpotImage,
   requireAuth,
   async (req, res, next) => {
 
