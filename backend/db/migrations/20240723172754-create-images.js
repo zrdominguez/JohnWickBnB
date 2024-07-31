@@ -12,11 +12,13 @@ module.exports = {
       imageableType: {
         type: Sequelize.ENUM,
         values: ['spot', 'review'],
-        allowNull: false
+        allowNull: false,
+        onDelete: "CASCADE"
       },
       imageableId: {
         type: Sequelize.INTEGER,
-        allowNull: false
+        allowNull: false,
+        onDelete: "CASCADE"
       },
       url: {
         type: Sequelize.STRING,
