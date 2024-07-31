@@ -1,5 +1,5 @@
 const express = require('express');
-const { Spot, User, Image, Review} = require('../../db/models');
+const { Spot, User, Image, Review, sequelize} = require('../../db/models');
 const { check } = require('express-validator');
 const { handleValidationErrors } = require('../../utils/validation');
 const {requireAuth} = require('../../utils/auth');
@@ -114,6 +114,7 @@ router.get('/current',
         ],
         required: true,
         attributes: {
+          //include: [[sequelize.col("SpotImages"), "previewImage"]],
           exclude: ['createdAt', 'updatedAt', 'description']
         },
       },
