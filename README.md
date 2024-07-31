@@ -275,7 +275,7 @@ Returns all the spots owned (created) by the current user.
 * Require Authentication: true
 * Request
   * Method: GET
-  * Route path: /api/spots/session
+  * Route path: /api/spots/current
   * Body: none
 
 * Successful Response
@@ -622,7 +622,7 @@ Returns all the reviews written by the current user.
 * Require Authentication: true
 * Request
   * Method: GET
-  * Route path: /api/reviews/session
+  * Route path: /api/reviews/current
   * Body: none
 
 * Successful Response
