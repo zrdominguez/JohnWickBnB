@@ -20,7 +20,6 @@ module.exports = {
      *   isBetaMember: false
      * }], {});
     */
-   try{
     await User.bulkCreate([
       {
         firstName: 'Demo',
@@ -44,9 +43,6 @@ module.exports = {
         hashedPassword: bcrypt.hashSync('password3')
       }
     ], { validate: true });
-  }catch(err){
-    console.error(err)
-  }
   },
 
   async down (queryInterface, Sequelize) {
