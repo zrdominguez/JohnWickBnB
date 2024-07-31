@@ -1,9 +1,8 @@
 const express = require('express');
-const { Spot, User, Image, Review, sequelize } = require('../../db/models');
+const { Spot, User, Image, Review} = require('../../db/models');
 const { check } = require('express-validator');
 const { handleValidationErrors } = require('../../utils/validation');
 const {requireAuth} = require('../../utils/auth');
-const { route } = require('./spots');
 
 const router = express.Router();
 
@@ -89,7 +88,7 @@ router.post('/:reviewId/images',
 })
 
 //Get reviews of current User
-router.get('/session',
+router.get('/current',
   requireAuth,
   async (req, res) => {
   const {id} = req.user;

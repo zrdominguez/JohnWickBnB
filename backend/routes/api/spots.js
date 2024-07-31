@@ -224,7 +224,7 @@ router.put('/:spotId',
 
 
 //Get spots of current user
-router.get('/session',
+router.get('/current',
   requireAuth,
   async (req, res) => {
   const {id} = req.user
