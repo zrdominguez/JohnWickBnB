@@ -158,7 +158,7 @@ async function checkBookingConflict(testBooking){
       errorList["endDate"] = "End date conflicts with an existing booking"
     }
   }
-  console.log(errorList)
+
   if(Object.keys(errorList).length > 0){
     const error = new Error("Sorry, this spot is already booked for the specified dates")
     error.status = 403
