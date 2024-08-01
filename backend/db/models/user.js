@@ -12,6 +12,30 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      User.hasMany(
+        models.Spot,
+        {
+          foreignKey: 'ownerId',
+          onDelete: "cascade",
+          hooks: true
+        }
+      )
+      User.hasMany(
+        models.Review,
+        {
+          foreignKey: 'userId',
+          onDelete: "cascade",
+          hooks: true
+        }
+      )
+      User.hasMany(
+        models.Booking,
+        {
+          foreignKey: 'userId',
+          onDelete: "cascade",
+          hooks: true
+        }
+      )
     }
   }
   User.init({
@@ -20,6 +44,8 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       unique: false,
       validate:{
+        notNull: { msg: 'First name is required' },
+        notEmpty: { msg: 'First name cannot be empty' },
         isNotEmail(value){
           if(Validator.isEmail(value)){
             throw new Error("Cannot be an email.");
@@ -33,6 +59,8 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       unique: false,
       validate:{
+        notNull: { msg: 'Last name is required' },
+        notEmpty: { msg: 'Last name cannot be empty' },
         isNotEmail(value){
           if(Validator.isEmail(value)){
             throw new Error("Cannot be an email.");
@@ -47,6 +75,8 @@ module.exports = (sequelize, DataTypes) => {
       unique: true,
       validate: {
         len:[4,30],
+        notNull: { msg: 'Username is required' },
+        notEmpty: { msg: 'Username cannot be empty' },
         isNotEmail(value){
           if(Validator.isEmail(value)){
             throw new Error("Cannot be an email.");
@@ -60,7 +90,8 @@ module.exports = (sequelize, DataTypes) => {
       unique: true,
       validate: {
         len: [3, 256],
-        isEmail: true
+        notNull: { msg: 'Email is required' },
+        isEmail: { msg: 'Email must be a valid email address' }
       }
     },
     hashedPassword:
