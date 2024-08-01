@@ -6,6 +6,10 @@ const {requireAuth} = require('../../utils/auth');
 
 const router = express.Router();
 
+/////////////////////////////////////////////////////////
+
+//express-validation arrays
+
 const validateSpot = [
   check("address")
     .exists({checkFalsy: true})
@@ -89,6 +93,33 @@ const validateNewReview =[
   handleValidationErrors
 ]
 
+const validateNewBooking = [
+  check('startDate')
+    .exists({checkFalsy: true})
+    .notEmpty()
+    .isString()
+    .custom(value =>{
+      const today = new Date()
+      return new Date(value) <= today ? false : true
+    })
+    .isDate()
+    .withMessage("startDate cannot be in the past"),
+  check('endDate')
+    .exists({checkFalsy: true})
+    .notEmpty()
+    .isString()
+    .custom((value, {req}) =>{
+      return new Date(value) >= req.body.endDate ? false : true
+    })
+    .isDate()
+    .withMessage("endDate cannot be on or before startDate"),
+  handleValidationErrors
+]
+
+/////////////////////////////////////////////////////////
+
+//helper functions
+
 function checkIfSpotExists(spot){
   if(!spot){
     const error = new Error("Spot couldn't be found")
@@ -97,6 +128,47 @@ function checkIfSpotExists(spot){
     return error;
   }
 }
+
+const isDateTheSame = (date1, date2) => {
+  if(date1 > date2 || date1 < date2) return false
+  return true
+}
+
+async function checkBookingConflict(testBooking){
+  const allBookings = await Booking.findAll({
+    where:{spotId: testBooking.spotId},
+    attributes:["startDate", "endDate"]
+  })
+
+  const testStartDate = testBooking.startDate;
+  const testEndDate = testBooking.endDate;
+
+
+  let errorList = {}
+
+  for await (const booking of allBookings) {
+    const {startDate, endDate} = booking
+
+    if(testStartDate < endDate &&
+      testStartDate > startDate ||
+      isDateTheSame(testStartDate, startDate)){
+      errorList["startDate"] = "Start date conflicts with an existing booking"
+    }
+    if(testEndDate > startDate && testEndDate <= endDate){
+      errorList["endDate"] = "End date conflicts with an existing booking"
+    }
+  }
+  console.log(errorList)
+  if(Object.keys(errorList).length > 0){
+    const error = new Error("Sorry, this spot is already booked for the specified dates")
+    error.status = 403
+    error.title = "Booking conflict"
+    error.errors = errorList
+    return error;
+  }
+}
+
+/////////////////////////////////////////////////////////
 
 //Create a Review for a Spot
 router.post('/:spotId/reviews',
@@ -194,6 +266,46 @@ router.get('/:spotId/reviews', async (req, res, next) => {
     })
 
     res.json({Reviews})
+})
+
+//Add a Booking to Spot
+router.post('/:spotId/bookings',
+  validateNewBooking,
+  requireAuth,
+  async (req, res, next) =>{
+    const {spotId} = req.params;
+    const spot = await Spot.findByPk(spotId)
+
+    let checkSpot = checkIfSpotExists(spot)
+    if(checkSpot) return next(checkSpot)
+
+    const {id} = req.user
+
+    const ownedSpot = await Spot.findOne({
+      where:{id:spotId, ownerId:id}
+    })
+
+    checkSpot = checkIfSpotExists(
+      ownedSpot && (spot.ownerId === ownedSpot.ownerId) ? null : true
+    )
+    if(checkSpot) return next(checkSpot)
+
+    const {startDate, endDate} = req.body
+
+    const newBooking = await Booking.build({
+      spotId: parseInt(spotId),
+      userId: id,
+      startDate: startDate,
+      endDate: endDate
+    })
+
+    const checkBooking = await checkBookingConflict(newBooking)
+    if(checkBooking) return next(checkBooking)
+
+    await newBooking.validate()
+    await newBooking.save();
+
+    res.json(newBooking)
 })
 
 //Add Image to Spot
