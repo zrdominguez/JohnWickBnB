@@ -1,5 +1,12 @@
 'use strict';
 
+const { Booking } = require('../models');
+
+let options = {};
+if (process.env.NODE_ENV === 'production') {
+  options.schema = process.env.SCHEMA;  // define your schema in options object
+}
+
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up (queryInterface, Sequelize) {
@@ -12,24 +19,24 @@ module.exports = {
      *   isBetaMember: false
      * }], {});
     */
-    await queryInterface.bulkInsert('Bookings', [
+    await Booking.bulkCreate([
       {
         spotId: 1,
         userId: 2,
-        startDate: new Date('2024-08-01'),
-        endDate: new Date('2024-08-07'),
+        startDate: new Date('2025-08-01'),
+        endDate: new Date('2025-08-07'),
         createdAt: new Date(),
         updatedAt: new Date()
       },
       {
         spotId: 2,
         userId: 1,
-        startDate: new Date ('2024-09-01'),
-        endDate: new Date("2024-09-05"),
+        startDate: new Date ('2025-09-01'),
+        endDate: new Date("2025-09-05"),
         createdAt: new Date(),
         updatedAt: new Date()
       }
-    ], {});
+    ], {validate: true});
   },
 
   async down (queryInterface, Sequelize) {
@@ -39,6 +46,10 @@ module.exports = {
      * Example:
      * await queryInterface.bulkDelete('People', null, {});
      */
-    await queryInterface.bulkDelete('Bookings', null, {});
+    options.tableName = 'Bookings'
+    const Op = Sequelize.Op;
+    return queryInterface.bulkDelete(options, {
+      userId: {[Op.lt]: 3}
+    }, {});
   }
 };

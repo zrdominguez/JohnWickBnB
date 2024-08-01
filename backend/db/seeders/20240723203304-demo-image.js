@@ -1,5 +1,12 @@
 'use strict';
 
+const { Image } = require('../models');
+
+let options = {};
+if (process.env.NODE_ENV === 'production') {
+  options.schema = process.env.SCHEMA;  // define your schema in options object
+}
+
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up (queryInterface, Sequelize) {
@@ -12,7 +19,7 @@ module.exports = {
      *   isBetaMember: false
      * }], {});
     */
-    await queryInterface.bulkInsert('Images', [
+    await Image.bulkCreate([
       {
         imageableType: 'spot',
         imageableId: 1,
@@ -61,7 +68,7 @@ module.exports = {
         createdAt: new Date(),
         updatedAt: new Date()
       }
-    ], {});
+    ], {validate: true});
   },
 
   async down (queryInterface, Sequelize) {
@@ -71,6 +78,10 @@ module.exports = {
      * Example:
      * await queryInterface.bulkDelete('People', null, {});
      */
-    await queryInterface.bulkDelete('Images', null, {});
+    options.tableName = 'Images'
+    const Op = Sequelize.Op;
+    return queryInterface.bulkDelete(options, {
+      imageableId: {[Op.lt]: 4}
+    }, {});
   }
 };

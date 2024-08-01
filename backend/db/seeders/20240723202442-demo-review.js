@@ -1,5 +1,12 @@
 'use strict';
 
+const { Review } = require('../models');
+
+let options = {};
+if (process.env.NODE_ENV === 'production') {
+  options.schema = process.env.SCHEMA;  // define your schema in options object
+}
+
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up (queryInterface, Sequelize) {
@@ -12,7 +19,7 @@ module.exports = {
      *   isBetaMember: false
      * }], {});
     */
-    await queryInterface.bulkInsert('Reviews', [
+    await Review.bulkCreate([
       {
         userId: 1,
         spotId: 1,
@@ -37,7 +44,7 @@ module.exports = {
         createdAt: new Date(),
         updatedAt: new Date()
       }
-    ], {});
+    ], {validate: true});
   },
 
   async down (queryInterface, Sequelize) {
@@ -47,6 +54,10 @@ module.exports = {
      * Example:
      * await queryInterface.bulkDelete('People', null, {});
      */
-    await queryInterface.bulkDelete('Reviews', null, {});
+    options.tableName = 'Reviews'
+    const Op = Sequelize.Op;
+    return queryInterface.bulkDelete(options, {
+      spotId: {[Op.lt]: 4}
+    }, {});
   }
 };
