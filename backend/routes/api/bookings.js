@@ -11,6 +11,7 @@ router.get('/current',
   requireAuth,
   async (req, res) => {
     const {user} = req;
+
     const userBookings = await Booking.findAll({
       where: {
         userId: user.id
@@ -25,7 +26,6 @@ router.get('/current',
           required: false
         },
         attributes:{
-          //include: [[sequelize.col("SpotImages"), "previewImage"]],
           exclude:["createdAt", "updatedAt"]
         },
         required: true
@@ -33,17 +33,13 @@ router.get('/current',
       group: ["Booking.id", "Spot.id"]
     })
 
-    const formatedBookings = await Promise.all(
-      userBookings.map(async (booking) => {
-        const spot = booking.Spot;
-
-        if(spot.SpotImages.length > 0){
-          spot.dataValues["previewImage"] = spot.SpotImages[0].url
-          delete spot.dataValues.SpotImages;
-        }
-
-        return booking
-    }))
+    userBookings.forEach(async (booking) => {
+      const spot = booking.Spot;
+      if(spot.SpotImages.length > 0){
+        spot.dataValues["previewImage"] = spot.SpotImages[0].url
+        delete spot.dataValues.SpotImages;
+      }
+    })
 
     res.json({Bookings: userBookings})
   })
