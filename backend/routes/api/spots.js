@@ -117,8 +117,8 @@ const validateNewBooking = [
 
 //Create a Review for a Spot
 router.post('/:spotId/reviews',
-validateNewReview,
 requireAuth,
+validateNewReview,
 async (req, res, next) => {
 
   const {spotId} = req.params
@@ -221,8 +221,8 @@ router.get('/:spotId/reviews', async (req, res, next) => {
 
 //Add a Booking to Spot
 router.post('/:spotId/bookings',
-  validateNewBooking,
   requireAuth,
+  validateNewBooking,
   async (req, res, next) =>{
     const {spotId} = req.params;
     const spot = await Spot.findByPk(spotId)
@@ -255,8 +255,8 @@ router.post('/:spotId/bookings',
 
 //Add Image to Spot
 router.post('/:spotId/images',
-  validateNewSpotImage,
   requireAuth,
+  validateNewSpotImage,
   async (req, res, next) => {
     const {spotId} = req.params;
     const spot = await Spot.findByPk(spotId);
@@ -287,8 +287,8 @@ router.post('/:spotId/images',
 
 //Edit Spot
 router.put('/:spotId',
-  validateSpot,
   requireAuth,
+  validateSpot,
   async (req, res, next) => {
     const {spotId} = req.params;
 
@@ -431,8 +431,8 @@ router.get('/', async (req, res)=>{
 
 //Create a spot
 router.post('/',
-  validateSpot,
   requireAuth,
+  validateSpot,
   async (req, res) => {
     const {
       address,
