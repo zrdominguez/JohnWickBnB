@@ -37,8 +37,8 @@ const validateBooking = [
 
 //Edit a Booking
 router.put('/:bookingId',
-  validateBooking,
   requireAuth,
+  validateBooking,
   async (req, res, next) =>{
     const {bookingId} = req.params
     const booking = await Booking.findByPk(bookingId);
