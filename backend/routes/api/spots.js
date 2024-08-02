@@ -244,8 +244,8 @@ router.post('/:spotId/bookings',
       endDate: endDate
     })
 
-    const checkBooking = await checkBookingConflict(newBooking)
-    if(checkBooking) return next(checkBooking)
+    const dateError = await checkBookingConflict(newBooking)
+    if(dateError) return next(dateError)
 
     await newBooking.validate()
     await newBooking.save();
