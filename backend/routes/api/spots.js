@@ -404,7 +404,7 @@ router.delete('/:spotId',
 //Get all spots
 router.get('/', async (req, res)=>{
 
-  const Spots = await Spot.findAll({
+  const spots = await Spot.findAll({
     include:[{
       model: Image,
       attributes: [],
@@ -426,7 +426,15 @@ router.get('/', async (req, res)=>{
     group:["Spot.id","SpotImages.url"]
   });
 
-  res.json({Spots});
+  const spotsWithAvgRating = spots.map(spot => {
+    const avgRating = parseFloat(spot.get('avgRating')) || 0;
+    return {
+      ...spot.toJSON(),
+      avgRating
+    };
+  });
+
+  res.json({Spots: spotsWithAvgRating});
 })
 
 //Create a spot
