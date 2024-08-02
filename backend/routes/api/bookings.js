@@ -1,10 +1,14 @@
 const express = require('express');
 const { Spot, Image, Booking, sequelize} = require('../../db/models');
 const { check } = require('express-validator');
+const { checkBookingConflict, checkOwnership, checkIfExists } = require('../../utils/helper');
 const { handleValidationErrors } = require('../../utils/validation');
 const {requireAuth} = require('../../utils/auth');
 
 const router = express.Router();
+///////////////////////////////////////////
+
+//express-validator arrays
 
 const validateBooking = [
   check('startDate')
@@ -14,7 +18,7 @@ const validateBooking = [
     .custom(value =>{
       const today = new Date()
       return new Date(value) <= today ? false : true
-    })
+    }).withMessage("startDate cannot be in the past")
     .isDate()
     .withMessage("startDate cannot be in the past"),
   check('endDate')
@@ -22,59 +26,14 @@ const validateBooking = [
     .notEmpty()
     .isString()
     .custom((value, {req}) =>{
-      return new Date(value) >= req.body.endDate ? false : true
-    })
+      return new Date(value) >= new Date(req.body.startDate) ? false : true
+    }).withMessage("endDate cannot be on or before startDate")
     .isDate()
     .withMessage("endDate cannot be on or before startDate"),
   handleValidationErrors
 ]
 
-const doesBookingExist = (booking) => {
-  if(!booking){
-    const error = new Error("Booking couldn't be found");
-    error.status = 404;
-    error.title =  "Couldn't find a Booking with the specified id";
-    return error;
-  }
-}
-
-const isDateTheSame = (date1, date2) => {
-  if(date1 > date2 || date1 < date2) return false
-  return true
-}
-
-async function checkBookingConflict(testBooking){
-  const allBookings = await Booking.findAll({
-    where:{spotId: testBooking.spotId},
-    attributes:["startDate", "endDate"]
-  })
-
-  const testStartDate = testBooking.startDate;
-  const testEndDate = testBooking.endDate;
-
-  let errorList = {}
-
-  for await (const booking of allBookings) {
-    const {startDate, endDate} = booking
-    console.log(isDateTheSame(testStartDate, startDate))
-    if(testStartDate < endDate &&
-      testStartDate > startDate ||
-      isDateTheSame(testStartDate, startDate)){
-      errorList["startDate"] = "Start date conflicts with an existing booking"
-    }
-    if(testEndDate > startDate && testEndDate <= endDate){
-      errorList["endDate"] = "End date conflicts with an existing booking"
-    }
-  }
-
-  if(Object.keys(errorList).length > 0){
-    const error = new Error("Sorry, this spot is already booked for the specified dates")
-    error.status = 403
-    error.title = "Booking conflict"
-    error.errors = errorList
-    return error;
-  }
-}
+///////////////////////////////////////////
 
 //Edit a Booking
 router.put('/:bookingId',
@@ -84,24 +43,22 @@ router.put('/:bookingId',
     const {bookingId} = req.params
     const booking = await Booking.findByPk(bookingId);
 
-    const notFoundError = doesBookingExist(booking)
+    const notFoundError = checkIfExists(booking, "Booking")
     if(notFoundError) return next(notFoundError)
 
     const {id} = req.user
-    const isntOwnerError = doesBookingExist(
-      booking.userId !== parseInt(id) ? null : true
-    );
 
-    if(isntOwnerError) return next(isntOwnerError)
+    const authError = checkOwnership(booking, true, id);
+    if(authError) return next(authError)
 
     const {startDate, endDate} = req.body;
 
-    const conflictDateError = await checkBookingConflict({
+    const dateError = await checkBookingConflict({
       spotId: booking.spotId,
       startDate: new Date(startDate),
       endDate: new Date(endDate)
     })
-    if(conflictDateError) return next(conflictDateError);
+    if(dateError) return next(dateError);
 
     await booking.update(req.body);
 
