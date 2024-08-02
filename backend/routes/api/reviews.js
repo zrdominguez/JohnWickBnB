@@ -1,10 +1,14 @@
 const express = require('express');
 const { Spot, User, Image, Review, sequelize} = require('../../db/models');
 const { check } = require('express-validator');
+const { checkIfExists, checkOwnership } = require('../../utils/helper')
 const { handleValidationErrors } = require('../../utils/validation');
 const {requireAuth} = require('../../utils/auth');
 
 const router = express.Router();
+///////////////////////////////////////////
+
+//express-validator arrays
 
 const validateNewReviewImage = [
   check("url")
@@ -30,51 +34,48 @@ const validateNewReview =[
   handleValidationErrors
 ]
 
-const checkIfReviewExists = (review) =>{
-  if(!review){
-    const error = new Error("Review couldn't be found");
-    error.status = 404;
-    error.title = "Not Found"
-    return error;
-  }
-}
+///////////////////////////////////////////
+
+//Helper Functions
 
 const checkImageLimit = (images) => {
   if(images.length > 10){
     let error = new Error("Maximum number of images for this resource was reached");
     error.status = 403
-    error.title = "Forbidden";
+    error.title = "Cannot add any more images because there is a maximum of 10";
     return error;
   }
 }
+
+///////////////////////////////////////////
 
 //Create a new Image for Review
 router.post('/:reviewId/images',
   validateNewReviewImage,
   requireAuth,
   async (req, res, next) =>{
-    const {id} = req.user;
     const {reviewId} = req.params;
 
-    const review = await Review.findOne({
-      where: {
-        userId: id,
-        id: reviewId
-      },
+    const review = await Review.findByPk(reviewId,{
       include:{
         model: Image,
         as: "ReviewImages",
         required: false,
         attributes: ["url"]
-      }
+      },
+      group:["ReviewImages.id"]
     })
 
-    //error handling to make sure user owns the review and if it exists
-    const checkReview = checkIfReviewExists(review);
-    if(checkReview) return next(checkReview);
-    //error handling to see if ReviewImages has reached image limit
+    const notFoundError = checkIfExists(review, 'Review');
+    if(notFoundError) return next(notFoundError);
+
     const checkLimit = checkImageLimit(review.ReviewImages);
     if(checkLimit) return next(checkLimit);
+
+    const {id} = req.user;
+
+    const authError = checkOwnership(review, true, id);
+    if(authError) return next(authError);
 
     const {url} = req.body;
 
@@ -152,8 +153,13 @@ router.put("/:reviewId",
 
     const review = await Review.findByPk(reviewId);
 
-    const checkReview = checkIfReviewExists(review);
-    if(checkReview) return next(checkReview);
+    const notFoundError = checkIfExists(review, 'Review');
+    if(notFoundError) return next(notFoundError);
+
+    const {id} = req.user;
+
+    const authError = checkOwnership(review, true, id);
+    if(authError) return next(authError);
 
     await review.update(req.body);
 
@@ -164,19 +170,17 @@ router.put("/:reviewId",
 router.delete("/:reviewId",
   requireAuth,
   async (req, res, next) => {
-    const {id} = req.user
     const {reviewId} = req.params;
 
-    const review = await Review.findOne({
-      where:{
-        userId: id,
-        id: reviewId
-      }
-    });
+    const review = await Review.findByPk(reviewId);
 
-    //error handling to make sure user owns the review and if it exists
-    const checkReview = checkIfReviewExists(review);
-    if(checkReview) return next(checkReview);
+    const notFoundError = checkIfExists(review, 'Review');
+    if(notFoundError) return next(notFoundError);
+
+    const {id} = req.user
+
+    const authError = checkOwnership(review, true, id);
+    if(authError) return next(authError);
 
     await review.destroy()
 
