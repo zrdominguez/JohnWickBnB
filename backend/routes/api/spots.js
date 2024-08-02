@@ -411,7 +411,6 @@ router.get('/', async (req, res)=>{
       as: "SpotImages",
       required: false,
       where:{preview: true},
-      group:["SpotImages.url"]
     },
     {
       model: Review,
