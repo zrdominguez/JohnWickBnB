@@ -63,7 +63,7 @@ router.post('/:reviewId/images',
         required: false,
         attributes: ["url"]
       },
-      group:["ReviewImages.id"]
+      group:["Review.id","ReviewImages.id"]
     })
 
     const notFoundError = checkIfExists(review, 'Review');
@@ -115,7 +115,6 @@ router.get('/current',
         ],
         required: true,
         attributes: {
-          //include: [[sequelize.col("SpotImages"), "previewImage"]],
           exclude: ['createdAt', 'updatedAt', 'description']
         },
       },
