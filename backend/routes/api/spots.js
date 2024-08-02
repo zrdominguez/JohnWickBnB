@@ -378,7 +378,7 @@ router.get('/:spotId', async (req, res, next) => {
         [sequelize.fn('COUNT', sequelize.col("Reviews.id")), "numReviews"],
       ]
     },
-    group: ['Spot.id', 'SpotImages.id']
+    group: ['Spot.id', 'SpotImages.id', 'Owner.id']
   });
 
   const checkSpot = checkIfExists(spot, 'Spot');
