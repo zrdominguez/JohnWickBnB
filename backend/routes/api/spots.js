@@ -410,7 +410,8 @@ router.get('/', async (req, res)=>{
       attributes: [],
       as: "SpotImages",
       required: false,
-      where:{preview: true}
+      where:{preview: true},
+      group:["SpotImages.url"]
     },
     {
       model: Review,
@@ -423,7 +424,7 @@ router.get('/', async (req, res)=>{
         [sequelize.col("SpotImages.url"), "previewImage"]
       ]
     },
-    group:["Spot.id", "SpotImages.id"]
+    group:["Spot.id"]
   });
 
   res.json({Spots});
