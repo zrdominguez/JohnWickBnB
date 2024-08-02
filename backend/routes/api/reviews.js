@@ -51,8 +51,8 @@ const checkImageLimit = (images) => {
 
 //Create a new Image for Review
 router.post('/:reviewId/images',
-  validateNewReviewImage,
   requireAuth,
+  validateNewReviewImage,
   async (req, res, next) =>{
     const {reviewId} = req.params;
 
@@ -146,8 +146,8 @@ router.get('/current',
 
 //Edit Review
 router.put("/:reviewId",
-  validateNewReview,
   requireAuth,
+  validateNewReview,
   async (req, res, next) => {
     const {reviewId} = req.params;
 
