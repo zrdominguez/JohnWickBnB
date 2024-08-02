@@ -1,4 +1,5 @@
 const express = require('express');
+const {checkBookingConflict, checkIfExists, checkOwnership} = require('../../utils/helper');
 const { Spot, User, Image, Review, Booking, sequelize } = require('../../db/models');
 const { check } = require('express-validator');
 const { handleValidationErrors} = require('../../utils/validation');
@@ -8,32 +9,28 @@ const router = express.Router();
 
 /////////////////////////////////////////////////////////
 
-//express-validation arrays
+//express-validator arrays
 
 const validateSpot = [
   check("address")
     .exists({checkFalsy: true})
     .notEmpty()
-    .customSanitizer(val => val ? val.replace(/\s+/g,'') : null)
-    .isAlphanumeric()
+    .isAlphanumeric('en-US', {ignore: '\s'})
     .withMessage('Street address is required'),
   check('city')
     .exists({checkFalsy: true})
     .notEmpty()
-    .customSanitizer(val=> val ? val.replace(/\s+/g,'') : null)
-    .isAlpha()
+    .isAlpha('en-US', {ignore: '\s'})
     .withMessage('City is required'),
   check('state')
     .exists({checkFalsy: true})
     .notEmpty()
-    .customSanitizer(val=> val ? val.replace(/\s+/g,'') : null)
-    .isAlpha()
+    .isAlpha('en-US', {ignore: '\s'})
     .withMessage('State is required'),
   check('country')
     .exists({checkFalsy: true})
     .notEmpty()
-    .customSanitizer(val=> val ? val.replace(/\s+/g,'') : null)
-    .isAlpha()
+    .isAlpha('en-US', {ignore: '\s'})
     .withMessage('Country is required'),
   check('lat')
     .exists({checkFalsy: true})
@@ -118,58 +115,6 @@ const validateNewBooking = [
 
 /////////////////////////////////////////////////////////
 
-//helper functions
-
-function checkIfSpotExists(spot){
-  if(!spot){
-    const error = new Error("Spot couldn't be found")
-    error.status = 404
-    error.title = "Not Found"
-    return error;
-  }
-}
-
-const isDateTheSame = (date1, date2) => {
-  if(date1 > date2 || date1 < date2) return false
-  return true
-}
-
-async function checkBookingConflict(testBooking){
-  const allBookings = await Booking.findAll({
-    where:{spotId: testBooking.spotId},
-    attributes:["startDate", "endDate"]
-  })
-
-  const testStartDate = testBooking.startDate;
-  const testEndDate = testBooking.endDate;
-
-
-  let errorList = {}
-
-  for await (const booking of allBookings) {
-    const {startDate, endDate} = booking
-
-    if(testStartDate < endDate &&
-      testStartDate > startDate ||
-      isDateTheSame(testStartDate, startDate)){
-      errorList["startDate"] = "Start date conflicts with an existing booking"
-    }
-    if(testEndDate > startDate && testEndDate <= endDate){
-      errorList["endDate"] = "End date conflicts with an existing booking"
-    }
-  }
-
-  if(Object.keys(errorList).length > 0){
-    const error = new Error("Sorry, this spot is already booked for the specified dates")
-    error.status = 403
-    error.title = "Booking conflict"
-    error.errors = errorList
-    return error;
-  }
-}
-
-/////////////////////////////////////////////////////////
-
 //Create a Review for a Spot
 router.post('/:spotId/reviews',
 validateNewReview,
@@ -179,23 +124,29 @@ async (req, res, next) => {
   const {spotId} = req.params
   const spot = await Spot.findByPk(spotId)
 
-  const checkSpot = checkIfSpotExists(spot)
-  if(checkSpot) return next(checkSpot)
+  const notFoundError = checkIfExists(spot, 'Spot')
+  if(notFoundError) return next(notFoundError)
+
+  const {id} = req.user
 
   const existingReview = await Review.findOne({
     where:{
       spotId: parseInt(spotId),
-      userId: spot.ownerId,
+      userId: parseInt(id),
     }
   })
 
-  if(existingReview) return next (new Error("User already has a review for this spot"));
+  if(existingReview) {
+    const error = new Error("User already has a review for this spot");
+    error.title = "Review from the current user already exists for the Spot";
+    return next(error);
+  }
 
   const {review, stars} = req.body;
 
   const newReview = await Review.build({
     spotId: parseInt(spotId),
-    userId: spot.ownerId,
+    userId: parseInt(id),
     review: review,
     stars: stars
   })
@@ -216,8 +167,8 @@ router.get('/:spotId/bookings',
 
   const spot = await Spot.findByPk(spotId)
 
-  const checkSpot = checkIfSpotExists(spot)
-  if(checkSpot) return next(checkSpot)
+  const notFoundError = checkIfExists(spot, 'Spot')
+  if(notFoundError) return next(notFoundError)
 
   if(spot.ownerId === parseInt(id)){
     options = {
@@ -244,8 +195,8 @@ router.get('/:spotId/reviews', async (req, res, next) => {
   const {spotId} = req.params
   const spot = await Spot.findByPk(spotId)
 
-  const checkSpot = checkIfSpotExists(spot)
-  if(checkSpot) return next(checkSpot)
+  const notFoundError = checkIfExists(spot, 'Spot')
+  if(notFoundError) return next(notFoundError)
 
   const Reviews = await Review.findAll({
     where: {spotId: spotId},
@@ -276,19 +227,13 @@ router.post('/:spotId/bookings',
     const {spotId} = req.params;
     const spot = await Spot.findByPk(spotId)
 
-    let checkSpot = checkIfSpotExists(spot)
-    if(checkSpot) return next(checkSpot)
+    let notFoundError = checkIfExists(spot, 'Spot')
+    if(notFoundError) return next(notFoundError)
 
     const {id} = req.user
 
-    const ownedSpot = await Spot.findOne({
-      where:{id:spotId, ownerId:id}
-    })
-
-    checkSpot = checkIfSpotExists(
-      ownedSpot && (spot.ownerId === ownedSpot.ownerId) ? null : true
-    )
-    if(checkSpot) return next(checkSpot)
+    const authError = checkOwnership(spot, false, id);
+    if(authError) return next(authError);
 
     const {startDate, endDate} = req.body
 
@@ -313,21 +258,19 @@ router.post('/:spotId/images',
   validateNewSpotImage,
   requireAuth,
   async (req, res, next) => {
+    const {spotId} = req.params;
+    const spot = await Spot.findByPk(spotId);
+
+    const notFoundError = checkIfExists(spot, 'Spot');
+    if(notFoundError) return next(notFoundError);
 
     const {id} = req.user
 
-    const {spotId} = req.params;
-    const spot = await Spot.findOne({
-      where:{
-        id: spotId,
-        ownerId: id
-      }
-    });
-
-    const checkSpot = checkIfSpotExists(spot);
-    if(checkSpot) return next(checkSpot)
+    const authError = checkOwnership(spot, true, id);
+    if(authError) return next(authError);
 
     const {url, preview} = req.body
+
     const newImage = await Image.build({
       imageableType: 'spot',
       imageableId: spotId,
@@ -347,18 +290,17 @@ router.put('/:spotId',
   validateSpot,
   requireAuth,
   async (req, res, next) => {
-    const {id} = req.user
     const {spotId} = req.params;
 
-    const spot = await Spot.findOne({
-      where:{
-        id: spotId,
-        ownerId: id
-      },
-    });
+    const spot = await Spot.findByPk(spotId)
 
-    const checkSpot = checkIfSpotExists(spot);
-    if(checkSpot) return next(checkSpot);
+    const notFoundError = checkIfExists(spot, 'Spot');
+    if(notFoundError) return next(notFoundError);
+
+    const {id} = req.user
+
+    const authError = checkOwnership(spot, true, id);
+    if(authError) return next(authError);
 
     await spot.update(req.body);
 
@@ -431,7 +373,7 @@ router.get('/:spotId', async (req, res, next) => {
     group: ['Spot.id', 'SpotImages.id']
   });
 
-  const checkSpot = checkIfSpotExists(spot);
+  const checkSpot = checkIfExists(spot, 'Spot');
   if(checkSpot) return next(checkSpot);
 
   res.json(spot);
@@ -441,18 +383,18 @@ router.get('/:spotId', async (req, res, next) => {
 router.delete('/:spotId',
   requireAuth,
   async (req, res, next) => {
+  const {spotId} = req.params;
+
+  const deletedSpot = await Spot.findByPk(spotId);
+
+  const notFoundError = checkIfExists(deletedSpot, 'Spot');
+  if(notFoundError) return next(notFoundError);
+
   const {id} = req.user
 
-  const {spotId} = req.params;
-  const deletedSpot = await Spot.findOne({
-    where:{
-      id: spotId,
-      ownerId: id
-    }
-  });
+  const authError = checkOwnership(deletedSpot, true, id);
+  if(authError) return next(authError);
 
-  const checkSpot = checkIfSpotExists(deletedSpot);
-  if(checkSpot) return next(checkSpot);
 
   await deletedSpot.destroy();
 
