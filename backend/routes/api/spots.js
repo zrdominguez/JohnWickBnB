@@ -336,10 +336,18 @@ router.get('/current',
         [sequelize.col("SpotImages.url"), "previewImage"]
       ]
     },
-    group:["Spot.id"]
+    group:["Spot.id", "SpotImages.url"]
   })
 
-  res.json({Spots: userSpots})
+  const spotsWithAvgRating = userSpots.map(spot => {
+    const avgRating = parseFloat(spot.get('avgRating')) || 0;
+    return {
+      ...spot.toJSON(),
+      avgRating
+    };
+  });
+
+  res.json({Spots: spotsWithAvgRating})
 })
 
 //Get Spot by spotId
@@ -376,7 +384,12 @@ router.get('/:spotId', async (req, res, next) => {
   const checkSpot = checkIfExists(spot, 'Spot');
   if(checkSpot) return next(checkSpot);
 
-  res.json(spot);
+  const avgRating = parseFloat(spot.get('avgRating')) || 0;
+
+  res.json({
+    ...spot.toJSON(),
+    avgRating
+  });
 })
 
 //Delete Spot
