@@ -26,7 +26,7 @@ const validateBooking = [
     .notEmpty()
     .isString()
     .custom((value, {req}) =>{
-      return new Date(value) >= new Date(req.body.startDate) ? false : true
+      return new Date(value) <= new Date(req.body.startDate) ? false : true
     }).withMessage("endDate cannot be on or before startDate")
     .isDate()
     .withMessage("endDate cannot be on or before startDate"),
