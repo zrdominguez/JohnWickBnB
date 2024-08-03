@@ -126,7 +126,7 @@ router.get('/current',
         required: false,
       }
     ],
-    group:["Review.id", "User.id", "Spot.id", "ReviewImages.id"]
+    group:["Review.id", "User.id", "Spot.id", "Spot.SpotImages.id", "ReviewImages.id"]
   })
 
   const formatedReviews = await Promise.all(
