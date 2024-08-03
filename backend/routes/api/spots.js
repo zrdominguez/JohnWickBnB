@@ -213,7 +213,7 @@ router.get('/:spotId/reviews', async (req, res, next) => {
         required: false,
       }
     ],
-    group:["Review.id", "ReviewImages.id"]
+    group:["Review.id", "User.id", "ReviewImages.id"]
     })
 
     res.json({Reviews})
@@ -308,7 +308,6 @@ router.put('/:spotId',
 
     res.json(spot)
 })
-
 
 //Get spots of current user
 router.get('/current',
