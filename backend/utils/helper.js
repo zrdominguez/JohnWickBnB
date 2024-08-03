@@ -30,12 +30,12 @@ async function checkBookingConflict(testBooking){
   for await (const booking of allBookings) {
     const {startDate, endDate} = booking
     console.log(isDateTheSame(testStartDate, startDate))
-    if(testStartDate < endDate &&
+    if(testStartDate <= endDate &&
       testStartDate > startDate ||
       isDateTheSame(testStartDate, startDate)){
       errorList["startDate"] = "Start date conflicts with an existing booking"
     }
-    if(testEndDate > startDate && testEndDate <= endDate){
+    if(testEndDate >= startDate && testEndDate <= endDate){
       errorList["endDate"] = "End date conflicts with an existing booking"
     }
   }
