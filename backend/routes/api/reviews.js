@@ -39,7 +39,7 @@ const validateNewReview =[
 //Helper Functions
 
 const checkImageLimit = (images) => {
-  if(images.length > 10){
+  if(images.length >= 10){
     let error = new Error("Maximum number of images for this resource was reached");
     error.status = 403
     error.title = "Cannot add any more images because there is a maximum of 10";
