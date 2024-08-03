@@ -35,6 +35,21 @@ const validateBooking = [
 
 ///////////////////////////////////////////
 
+//Helper Functions
+
+const cantDelete = (booking)=>{
+  const {startDate} = booking;
+  const today = new Date();
+  if(startDate <= today){
+    const error = new Error("Bookings that have been started can't be deleted");
+    error.title = "Bookings that have been started can't be deleted";
+    error.status = 403
+    return error
+  }
+}
+
+///////////////////////////////////////////
+
 //Edit a Booking
 router.put('/:bookingId',
   requireAuth,
@@ -63,6 +78,29 @@ router.put('/:bookingId',
     await booking.update(req.body);
 
     res.json(booking);
+})
+
+router.delete('/:bookingId',
+  requireAuth,
+  async (req, res, next) => {
+    const {bookingId} = req.params;
+
+    const deletedBooking = await Booking.findByPk(bookingId);
+
+    const notFoundError = checkIfExists(deletedBooking, 'Booking');
+    if(notFoundError) return next(notFoundError);
+
+    const {id} = req.user;
+
+    const authError = checkOwnership(deletedBooking, true, id);
+    if(authError) return next(authError);
+
+    const dateError = cantDelete(deletedBooking);
+    if(dateError) return next(dateError);
+
+    await deletedBooking.destroy()
+
+    res.json({message: "Successfully deleted"});
 })
 
 //Get all Bookings of the Current User
