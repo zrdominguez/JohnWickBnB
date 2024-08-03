@@ -2,10 +2,10 @@ const { check } = require('express-validator');
 const {Review, Booking, Spot}= require('../db/models');
 
 //finds out if date1 is the same as date2
-const isDateTheSame = (date1, date2) => {
-  if(date1 > date2 || date1 < date2) return false
-  return true
-}
+// const isDateTheSame = (date1, date2) => {
+//   if(date1 > date2 || date1 < date2) return false
+//   return true
+// }
 
 //Finds conflicts in booking dates
 async function checkBookingConflict(testBooking){
@@ -31,11 +31,15 @@ async function checkBookingConflict(testBooking){
     const {startDate, endDate} = booking
     console.log(isDateTheSame(testStartDate, startDate))
     if(testStartDate <= endDate &&
-      testStartDate > startDate ||
-      isDateTheSame(testStartDate, startDate)){
+      testStartDate >= startDate ||
+      testStartDate < startDate &&
+      testEndDate > startDate){
       errorList["startDate"] = "Start date conflicts with an existing booking"
     }
-    if(testEndDate >= startDate && testEndDate <= endDate){
+    if(testEndDate >= startDate &&
+      testEndDate <= endDate ||
+      testEndDate > endDate &&
+      testStartDate < endDate){
       errorList["endDate"] = "End date conflicts with an existing booking"
     }
   }
