@@ -176,7 +176,7 @@ router.get('/:spotId/bookings',
         model: User,
         attributes: ["id", "firstName", "lastName"],
       },
-      group: ["Booking.id"]
+      group: ["Booking.id, User.id"]
     }
   }else{
     options = {
