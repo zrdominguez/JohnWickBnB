@@ -29,7 +29,7 @@ async function checkBookingConflict(testBooking){
 
   for await (const booking of allBookings) {
     const {startDate, endDate} = booking
-    console.log(isDateTheSame(testStartDate, startDate))
+
     if(testStartDate <= endDate &&
       testStartDate >= startDate ||
       testStartDate < startDate &&
