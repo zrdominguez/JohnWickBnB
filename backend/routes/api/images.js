@@ -36,11 +36,11 @@ router.delete('/:imageId',
         attributes:["id", "ownerId"]
       })
     }
-    // else{
-    //   instance = await Review.findByPk(image.imageableId,{
-    //     attributes:["id", "userId"]
-    //   })
-    // }
+    else{
+      instance = await Review.findByPk(image.imageableId,{
+        attributes:["id", "userId"]
+      })
+    }
     const { id } = req.user
     const authError = checkOwnership(instance, true, id);
     if(authError) return next(authError);
