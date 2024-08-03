@@ -80,7 +80,7 @@ router.put('/:bookingId',
     res.json(booking);
 })
 
-//Delete a Booking
+//Delete a Bookings
 router.delete('/:bookingId',
   requireAuth,
   async (req, res, next) => {
