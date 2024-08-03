@@ -14,12 +14,12 @@ const validateBooking = [
   check('startDate')
     .exists({checkFalsy: true})
     .notEmpty()
-    .isString()
+    .isString().withMessage("isString")
     .custom(value =>{
       const today = new Date()
       return new Date(value) <= today ? false : true
     }).withMessage("startDate cannot be in the past")
-    .isDate()
+    .isDate().withMessage("isDate")
     .withMessage("startDate cannot be in the past"),
   check('endDate')
     .exists({checkFalsy: true})

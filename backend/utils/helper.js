@@ -1,12 +1,6 @@
 const { check } = require('express-validator');
 const {Review, Booking, Spot}= require('../db/models');
 
-//finds out if date1 is the same as date2
-// const isDateTheSame = (date1, date2) => {
-//   if(date1 > date2 || date1 < date2) return false
-//   return true
-// }
-
 //Finds conflicts in booking dates
 async function checkBookingConflict(testBooking){
   const allBookings = await Booking.findAll({
