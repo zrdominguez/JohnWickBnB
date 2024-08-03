@@ -89,7 +89,7 @@ router.get('/current',
         },
         required: true
       },
-      group: ["Booking.id", "Spot.id"]
+      group: ["Booking.id", "Spot.id", "Spot.SpotImages.id"]
     })
 
     userBookings.forEach(async (booking) => {
