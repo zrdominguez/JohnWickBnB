@@ -94,20 +94,20 @@ const validateNewBooking = [
   check('startDate')
     .exists({checkFalsy: true})
     .notEmpty()
-    .isString()
+    .isString().withMessage("isString")
     .custom(value =>{
       const today = new Date()
       return new Date(value) <= today ? false : true
-    })
-    .isDate()
+    }).withMessage("startDate cannot be in the past")
+    .isDate().withMessage("isDate")
     .withMessage("startDate cannot be in the past"),
   check('endDate')
     .exists({checkFalsy: true})
     .notEmpty()
     .isString()
     .custom((value, {req}) =>{
-      return new Date(value) >= req.body.endDate ? false : true
-    })
+      return new Date(value) >= new Date(req.body.startDate) ? false : true
+    }).withMessage("endDate cannot be on or before startDate")
     .isDate()
     .withMessage("endDate cannot be on or before startDate"),
   handleValidationErrors
