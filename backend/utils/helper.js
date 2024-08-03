@@ -33,13 +33,13 @@ async function checkBookingConflict(testBooking){
     if(testStartDate <= endDate &&
       testStartDate >= startDate ||
       testStartDate < startDate &&
-      testEndDate > startDate){
+      testEndDate > endDate){
       errorList["startDate"] = "Start date conflicts with an existing booking"
     }
     if(testEndDate >= startDate &&
       testEndDate <= endDate ||
       testEndDate > endDate &&
-      testStartDate < endDate){
+      testStartDate < startDate){
       errorList["endDate"] = "End date conflicts with an existing booking"
     }
   }
