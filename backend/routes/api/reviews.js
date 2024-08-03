@@ -117,6 +117,7 @@ router.get('/current',
         attributes: {
           exclude: ['createdAt', 'updatedAt', 'description']
         },
+        group:["SpotImages.id"]
       },
       {
         model: Image,
@@ -125,7 +126,7 @@ router.get('/current',
         required: false,
       }
     ],
-    group:["Review.id", "User.id", "Spot.id", "SpotImages.id", "ReviewImages.id"]
+    group:["Review.id", "User.id", "Spot.id", "ReviewImages.id"]
   })
 
   const formatedReviews = await Promise.all(
