@@ -1,7 +1,8 @@
 const express = require('express');
+const { Op } = require('sequelize');
 const {checkBookingConflict, checkIfExists, checkOwnership} = require('../../utils/helper');
 const { Spot, User, Image, Review, Booking, sequelize } = require('../../db/models');
-const { check } = require('express-validator');
+const { check, query } = require('express-validator');
 const { handleValidationErrors} = require('../../utils/validation');
 const {requireAuth} = require('../../utils/auth');
 
@@ -110,6 +111,52 @@ const validateNewBooking = [
     }).withMessage("endDate cannot be on or before startDate")
     .isDate()
     .withMessage("endDate cannot be on or before startDate"),
+  handleValidationErrors
+]
+
+const validateQuery = [
+  query('page')
+    .default(1)
+    .isInt({min: 1}).withMessage(
+      "Page must be greater than or equal to 1"
+    ),
+  query('size')
+    .default(20)
+    .isInt({min: 1, max: 20}).withMessage(
+      "Size must be between 1 and 20"
+    ),
+  query('maxLat')
+    .optional()
+    .isDecimal().withMessage(
+      "Maximum latitude is invalid"
+    ),
+  query('minLat')
+    .optional()
+    .isDecimal().withMessage(
+      "Minimum latitude is invalid"
+    ),
+  query('maxLng')
+    .optional()
+    .isDecimal().withMessage(
+      "Maximum longitude is invalid"
+    ),
+  query('minLng')
+    .optional()
+    .isDecimal().withMessage(
+      "Minimum longitude is invalid"
+    ),
+  query('minPrice')
+    .optional()
+    .isDecimal()
+    .isFloat({min:0}).withMessage(
+      "Minimum price must be greater than or equal to 0"
+    ),
+  query('maxPrice')
+    .optional()
+    .isDecimal()
+    .isFloat({min:0}).withMessage(
+      "Maximum price must be greater than or equal to 0"
+    ),
   handleValidationErrors
 ]
 
@@ -414,13 +461,43 @@ router.delete('/:spotId',
 })
 
 //Get all spots
-router.get('/', async (req, res)=>{
+router.get('/',
+  validateQuery,
+  async (req, res)=>{
 
-  const spots = await Spot.findAll({
+  const {
+    page,
+    size,
+    maxLat,
+    minLat,
+    maxLng,
+    minLng,
+    minPrice,
+    maxPrice,
+  } = req.query
+
+  const offset = size * (page - 1);
+  const limit = size;
+
+  const options = {
+    where:{
+      lat: {[Op.and]: [
+        {[Op.gte]: minLat || -90},
+        {[Op.lte]: maxLat || 90},
+      ]},
+      lng: {[Op.and]: [
+        {[Op.gte]: minLng || -180},
+        {[Op.lte]: maxLng || 180}
+      ]},
+      price: {[Op.and]: [
+        {[Op.gte]: minPrice || 0},
+        {[Op.or]: [{[Op.lte]: maxPrice || 0}, {[Op.lte]: minPrice || 0}]}
+      ]}
+    },
     include:[{
       model: Image,
-      attributes: [],
       as: "SpotImages",
+      attributes: [],
       required: false,
       where:{preview: true},
     },
@@ -435,8 +512,14 @@ router.get('/', async (req, res)=>{
         [sequelize.col("SpotImages.url"), "previewImage"]
       ]
     },
-    group:["Spot.id","SpotImages.url"]
-  });
+    group:["Spot.id","SpotImages.id"],
+    offset: offset,
+    limit: limit,
+    subQuery: false
+  }
+
+  const spots = await Spot.findAll(options)
+
 
   const spotsWithAvgRating = spots.map(spot => {
     const avgRating = parseFloat(spot.get('avgRating')) || 0;
