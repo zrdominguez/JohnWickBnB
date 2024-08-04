@@ -1436,8 +1436,8 @@ Return spots filtered by query parameters.
         "size": "Size must be between 1 and 20",
         "maxLat": "Maximum latitude is invalid",
         "minLat": "Minimum latitude is invalid",
-        "minLng": "Maximum longitude is invalid",
-        "maxLng": "Minimum longitude is invalid",
+        "maxLng": "Maximum longitude is invalid",
+        "minLng": "Minimum longitude is invalid",
         "minPrice": "Minimum price must be greater than or equal to 0",
         "maxPrice": "Maximum price must be greater than or equal to 0"
       }
