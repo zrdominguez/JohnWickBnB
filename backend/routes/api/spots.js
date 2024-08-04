@@ -476,6 +476,7 @@ router.get('/',
     maxPrice,
   } = req.query
 
+  const mostExpensive = await Spot.max('price');
   const offset = size * (page - 1);
   const limit = size;
 
@@ -491,7 +492,7 @@ router.get('/',
       ]},
       price: {[Op.and]: [
         {[Op.gte]: minPrice || 0},
-        {[Op.or]: [{[Op.lte]: maxPrice || 0}, {[Op.lte]: minPrice || 0}]}
+        {[Op.lte]: maxPrice || mostExpensive}
       ]}
     },
     include:[{
@@ -529,7 +530,7 @@ router.get('/',
     };
   });
 
-  res.json({Spots: spotsWithAvgRating});
+  res.json({Spots: spotsWithAvgRating, max: mostExpensive});
 })
 
 //Create a spot
