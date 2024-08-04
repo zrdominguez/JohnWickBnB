@@ -1,14 +1,10 @@
 const express = require('express');
 const { Spot, Image, Review, Booking, User,sequelize} = require('../../db/models');
-const { check } = require('express-validator');
-const { checkBookingConflict, checkOwnership, checkIfExists } = require('../../utils/helper');
-const { handleValidationErrors } = require('../../utils/validation');
 const {requireAuth} = require('../../utils/auth');
-const { includes } = require('lodash');
 
 const router = express.Router();
 
-//Delete a Spot
+//Delete a Spot Image or a Review Image
 router.delete('/:imageId',
   requireAuth,
   async (req, res, next) => {
