@@ -1,5 +1,4 @@
-const { check } = require('express-validator');
-const {Review, Booking, Spot}= require('../db/models');
+const { Booking }= require('../db/models');
 
 //Finds conflicts in booking dates
 async function checkBookingConflict(testBooking){
