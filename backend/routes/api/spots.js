@@ -125,13 +125,14 @@ const validateQuery = [
     ),
   query('maxLat')
     .optional()
+    .isDecimal()
     .isFloat({max: 90})
     .withMessage(
       "Maximum latitude is invalid"
     ),
   query('minLat')
     .optional()
-    .custom(val=>console.log(val > -90))
+    .isDecimal()
     .isFloat({min: -90})
     .withMessage(
       "Minimum latitude is invalid"
