@@ -96,7 +96,7 @@ const validateNewBooking = [
     .isString().withMessage("isString")
     .custom(value =>{
       const today = new Date()
-      return new Date(value) <= today ? false : true
+      return new Date(value) <= today ? false : value
     }).withMessage("startDate cannot be in the past")
     .isDate().withMessage("isDate")
     .withMessage("startDate cannot be in the past"),
@@ -105,7 +105,7 @@ const validateNewBooking = [
     .notEmpty()
     .isString()
     .custom((value, {req}) =>{
-      return new Date(value) <= new Date(req.body.startDate) ? false : true
+      return new Date(value) <= new Date(req.body.startDate) ? false : value
     }).withMessage("endDate cannot be on or before startDate")
     .isDate()
     .withMessage("endDate cannot be on or before startDate"),
@@ -129,40 +129,64 @@ const validateQuery = [
     .isFloat({max: 90})
     .withMessage(
       "Maximum latitude is invalid"
-    ),
+    )
+    .custom((value, {req}) => {
+      if(value >= req.query.minLat) return value
+      else throw new Error("Maximum Latitude cannot be less than Minimum Latitude")
+    }),
   query('minLat')
     .optional()
     .isDecimal()
     .isFloat({min: -90})
     .withMessage(
       "Minimum latitude is invalid"
-    ),
+    )
+    .custom((value, {req}) => {
+      if(value <= req.query.maxLat) return value
+      else throw new Error("Minimum Latitude cannot be more than Maximum Latitude")
+    }),
   query('maxLng')
     .optional()
     .isDecimal()
     .isFloat({max: 180})
     .withMessage(
       "Maximum longitude is invalid"
-    ),
+    )
+    .custom((value, {req}) => {
+      if(value >= req.query.minLng) return value
+      else throw new Error("Maximum Longitude cannot be less than Minimum Longitude")
+    }),
   query('minLng')
     .optional()
     .isDecimal()
     .isFloat({min: -180})
     .withMessage(
       "Minimum longitude is invalid"
-    ),
+    )
+    .custom((value, {req}) => {
+      if(value <= req.query.maxLng) return value
+      else throw new Error("Minimum Longitude cannot be more than Maximum Longitude")
+    }),
   query('minPrice')
     .optional()
-    .isDecimal()
-    .isFloat({min:0}).withMessage(
+    .isFloat({min:0})
+    .withMessage(
       "Minimum price must be greater than or equal to 0"
-    ),
+    )
+    .custom((value, {req}) => {
+      if(value <= req.query.maxPrice) return value
+      else throw new Error("Minimum price cannot be more than Maximum price")
+    }),
   query('maxPrice')
     .optional()
-    .isDecimal()
-    .isFloat({min:0}).withMessage(
+    .isFloat({min:0})
+    .withMessage(
       "Maximum price must be greater than or equal to 0"
-    ),
+    )
+    .custom((value, {req}) => {
+      if(value >= req.query.minPrice) return value
+      else throw new Error("Maximum price cannot be less than Minimum price")
+    }),
   handleValidationErrors
 ]
 
@@ -536,7 +560,7 @@ router.get('/',
     };
   });
 
-  res.json({Spots: spotsWithAvgRating, max: mostExpensive});
+  res.json({Spots: spotsWithAvgRating});
 })
 
 //Create a spot
