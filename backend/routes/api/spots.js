@@ -36,13 +36,11 @@ const validateSpot = [
   check('lat')
     .exists({checkFalsy: true})
     .notEmpty()
-    .isDecimal()
     .isFloat({min: -90, max: 90})
     .withMessage('Latitude must be within -90 and 90'),
   check('lng')
     .exists({checkFalsy: true})
     .notEmpty()
-    .isDecimal()
     .isFloat({min: -180, max: 180})
     .withMessage('Longitude must be within -180 and 180'),
   check('name')
@@ -127,22 +125,29 @@ const validateQuery = [
     ),
   query('maxLat')
     .optional()
-    .isDecimal().withMessage(
+    .isFloat({max: 90})
+    .withMessage(
       "Maximum latitude is invalid"
     ),
   query('minLat')
     .optional()
-    .isDecimal().withMessage(
+    .custom(val=>console.log(val > -90))
+    .isFloat({min: -90})
+    .withMessage(
       "Minimum latitude is invalid"
     ),
   query('maxLng')
     .optional()
-    .isDecimal().withMessage(
+    .isDecimal()
+    .isFloat({max: 180})
+    .withMessage(
       "Maximum longitude is invalid"
     ),
   query('minLng')
     .optional()
-    .isDecimal().withMessage(
+    .isDecimal()
+    .isFloat({min: -180})
+    .withMessage(
       "Minimum longitude is invalid"
     ),
   query('minPrice')
