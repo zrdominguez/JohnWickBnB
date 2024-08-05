@@ -12,8 +12,6 @@ router.delete('/:imageId',
     'spot' : 'review';
     const {imageId} = req.params;
 
-    console.log(type)
-
     const image = await Image.findOne({
       where : {
         id : imageId,
