@@ -7,7 +7,7 @@ import configureStore from './store';
 
 const store = configureStore();
 
-if(ProcessingInstruction.env.NODE_ENV !== 'production'){
+if (import.meta.env.MODE !== 'production') {
   window.store = store;
 }
 
