@@ -1,0 +1,19 @@
+h1 {
+  text-align: center;
+}
+
+form {
+  text-align: right;
+}
+
+label {
+  margin: 10px;
+}
+
+label>input {
+  margin: 5px
+}
+
+button:hover{
+  font-weight: bold;
+}
