@@ -5,6 +5,10 @@ import * as sessionActions from '../../store/session';
 import OpenModalMenuItem from './OpenModalMenuItem';
 import LoginFormModal from '../LoginFormModal';
 import SignupFormModal from '../SignupFormModal';
+import { GiHamburgerMenu } from "react-icons/gi";
+import { LuLogIn } from "react-icons/lu";
+import { LuPencil } from "react-icons/lu";
+
 
 export const ProfileButton = ({ user }) => {
   const dispatch = useDispatch();
@@ -42,8 +46,9 @@ export const ProfileButton = ({ user }) => {
 
   return (
     <>
-      <button onClick={toggleMenu}>
-        <FaUserCircle />
+      <button onClick={toggleMenu} className='profile-button'>
+        <GiHamburgerMenu className='hamburger-icon' style={{color: '#c3ba6d'}}/>
+        <FaUserCircle className='profile-icon'  style={{color: '#c3ba6d'}}/>
       </button>
       <ul className={ulClassName} ref={ulRef}>
         {user ? (
@@ -58,11 +63,13 @@ export const ProfileButton = ({ user }) => {
         ) : (
           <>
             <OpenModalMenuItem
+              itemIcon={<LuLogIn />}
               itemText="Log In"
               onItemClick={closeMenu}
               modalComponent={<LoginFormModal />}
             />
             <OpenModalMenuItem
+            itemIcon={<LuPencil />}
               itemText="Sign Up"
               onItemClick={closeMenu}
               modalComponent={<SignupFormModal />}

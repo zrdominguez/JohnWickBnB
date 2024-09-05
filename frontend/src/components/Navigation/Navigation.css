@@ -1,3 +1,49 @@
+.profile-dropdown{
+  flex-direction: column;
+  padding-left: 0px;
+  margin-bottom: 5px;
+  margin-top: 5px;
+}
+
 .profile-dropdown.hidden{
   visibility: hidden;
+}
+
+.profile-dropdown li{
+  display: flex;
+  align-items: center;
+}
+
+.profile-button{
+  margin-top: 26px;
+  border-radius: 8px;
+  border: 0px;
+  background-color: #020a15;
+}
+
+.home-link{
+  text-decoration: none;
+  text-decoration-color: #c3ba6d;
+  color: #c3ba6d;
+  display: flex;
+  align-items: center;
+  font-weight: bold;
+}
+
+nav{
+  background-color: #020a15;
+  margin-top: 0px;
+}
+
+nav ul{
+  list-style-type: none;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-right: 18px;
+  margin-top: 0px;
+}
+
+.hamburger-icon, .profile-icon{
+  margin: 2px;
 }
