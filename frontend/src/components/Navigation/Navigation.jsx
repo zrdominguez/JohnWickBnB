@@ -11,7 +11,8 @@ export const Navigation = ({ isLoaded }) => {
     <nav>
       <ul>
         <li className='home-link'>
-          <FaAirbnb />The Continental
+          <FaAirbnb />
+          <h3>The Continental</h3>
           <NavLink to="/" ></NavLink>
         </li>
         {isLoaded && (

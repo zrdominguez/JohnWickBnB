@@ -1,38 +1,7 @@
-.profile-dropdown{
-  flex-direction: column;
-  padding-left: 0px;
-  margin-bottom: 5px;
-  margin-top: 5px;
-}
-
-.profile-dropdown.hidden{
-  visibility: hidden;
-}
-
-.profile-dropdown li{
-  display: flex;
-  align-items: center;
-}
-
-.profile-button{
-  margin-top: 26px;
-  border-radius: 8px;
-  border: 0px;
-  background-color: #020a15;
-}
-
-.home-link{
-  text-decoration: none;
-  text-decoration-color: #c3ba6d;
-  color: #c3ba6d;
-  display: flex;
-  align-items: center;
-  font-weight: bold;
-}
-
 nav{
   background-color: #020a15;
   margin-top: 0px;
+  overflow: visible;
 }
 
 nav ul{
@@ -42,6 +11,62 @@ nav ul{
   align-items: center;
   padding-right: 18px;
   margin-top: 0px;
+}
+
+.profile-dropdown{
+  display: block;
+  padding-left: 0px;
+  margin-bottom: 5px;
+  margin-top: 5px;
+  background-color: #4f768e;
+  box-shadow: 0 0 0 1px #c3ba6d;
+  border-radius: 2px;
+  position: absolute;                 /* Position absolutely relative to button */
+  top: 2.75em;              /* Place below the button with some spacing */
+  right: 0;
+  z-index: 10;
+  margin-right: 18px;
+  width: 100px;
+}
+
+.profile-dropdown.hidden{
+  visibility: hidden;
+}
+
+.profile-dropdown li{
+  color: #1a42a0;
+  float: left;
+  gap: 5px;
+  padding-left: 5px;
+}
+
+.profile-button{
+  display: flex;
+  justify-content: space-evenly;
+  border-radius: 8px;
+  border-style: solid;
+  border-color:white;
+  padding: 0;
+  background-color: #020a15;
+  position: relative;
+  cursor: pointer;
+}
+
+.home-link{
+  text-decoration: none;
+  color: #c3ba6d;
+  display: flex;
+  align-items: center;
+  font-weight: bold;
+  font-family: sans-serif;
+  cursor: pointer;
+}
+
+
+.list-profile-button{
+  display: flex;
+  flex-direction: column;
+  font-family: ChigacoFLF, sans-serif;;
 }
 
 .hamburger-icon, .profile-icon{
