@@ -8,19 +8,21 @@ export const Navigation = ({ isLoaded }) => {
   const sessionUser = useSelector(state => state.session.user);
 
   return (
-    <nav>
-      <ul>
-        <li className='home-link'>
-          <FaAirbnb />
-          <h3>The Continental</h3>
-          <NavLink to="/" ></NavLink>
-        </li>
-        {isLoaded && (
-          <li className='list-profile-button'>
-            <ProfileButton user={sessionUser} className='profile-button'/>
+    <header>
+      <nav>
+        <ul>
+          <li className='home-link'>
+            <FaAirbnb />
+            <h3>The Continental</h3>
+            <NavLink to="/" ></NavLink>
           </li>
-        )}
-      </ul>
-    </nav>
+          {isLoaded && (
+            <li className='list-profile-button'>
+              <ProfileButton user={sessionUser} className='profile-button'/>
+            </li>
+          )}
+        </ul>
+      </nav>
+    </header>
   );
 }
