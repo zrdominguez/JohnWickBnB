@@ -35,9 +35,9 @@ export const SpotDetails = () => {
     description
   } = spot
 
-  if(isNaN(0)) icon = <IoMdStarOutline />
+  if(isNaN(avgStarRating)) icon = <IoMdStarOutline />
   else {
-    icon = 0 >= 4 ? <IoMdStar /> : <IoMdStarHalf />
+    icon = avgStarRating >= 4 ? <IoMdStar /> : <IoMdStarHalf />
   }
 
 
