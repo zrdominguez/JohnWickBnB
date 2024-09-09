@@ -31,9 +31,8 @@ nav ul{
   border-radius: 2px;
   position: absolute;                 /* Position absolutely relative to button */
   top: 2.75em;              /* Place below the button with some spacing */
-  right: 0;
+  right: 39px;
   z-index: 10;
-  margin-right: 18px;
   width: 100px;
 }
 

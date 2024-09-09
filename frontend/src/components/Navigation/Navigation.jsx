@@ -11,10 +11,13 @@ export const Navigation = ({ isLoaded }) => {
     <header>
       <nav>
         <ul>
-          <li className='home-link'>
-            <FaAirbnb />
-            <h3>The Continental</h3>
-            <NavLink to="/" ></NavLink>
+          <li>
+            <NavLink
+            to="/"
+            className='home-link'>
+              <FaAirbnb />
+              <h3>The Continental</h3>
+            </NavLink>
           </li>
           {isLoaded && (
             <li className='list-profile-button'>

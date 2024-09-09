@@ -11,6 +11,17 @@ export const LoginFormModal = () => {
   const [errors, setErrors] = useState({});
   const { closeModal } = useModal();
 
+  const handleDemo = () => {
+    const demo = {
+      credential:'Demo-lition',
+      password:'password',
+    }
+
+    return dispatch(sessionActions.login(demo))
+    .then(closeModal)
+  }
+
+
   const handleSubmit = (e) => {
     e.preventDefault();
     setErrors({});
@@ -49,7 +60,12 @@ export const LoginFormModal = () => {
         {errors.credential && (
           <p>{errors.credential}</p>
         )}
-        <button type="submit">Log In</button>
+        <button type="submit" className='login-button'>Log In</button>
+        <a
+        className='demo-user'
+        onClick={handleDemo}>
+          Demo-User
+        </a>
       </form>
     </>
   );

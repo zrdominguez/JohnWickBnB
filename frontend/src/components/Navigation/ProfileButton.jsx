@@ -16,7 +16,7 @@ export const ProfileButton = ({ user }) => {
   const ulRef = useRef();
 
   const toggleMenu = (e) => {
-    e.stopPropagation(); // Keep from bubbling up to document and triggering closeMenu
+    e.stopPropagation();
     setShowMenu(!showMenu);
   };
 
@@ -69,7 +69,7 @@ export const ProfileButton = ({ user }) => {
               modalComponent={<LoginFormModal />}
             />
             <OpenModalMenuItem
-            itemIcon={<LuPencil />}
+              itemIcon={<LuPencil />}
               itemText="Sign Up"
               onItemClick={closeMenu}
               modalComponent={<SignupFormModal />}
