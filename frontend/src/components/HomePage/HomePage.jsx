@@ -1,4 +1,4 @@
-import { useState, useEffect} from 'react';
+import { useEffect} from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { getSpots, getUserSpots, selectAllSpotsArry, selectCurrentUserSpots} from '../../store/spots';
 import SpotCard from "../SpotCard";

@@ -5,7 +5,7 @@ import { useEffect } from "react";
 import './SpotDetails.css';
 import { IoMdStar } from "react-icons/io";
 import { IoMdStarHalf } from "react-icons/io";
-import { IoMdStarOutline } from "react-icons/io";
+//import { IoMdStarOutline } from "react-icons/io";
 import SpotReviewList from "../components/SpotReviewList";
 
 export const SpotDetails = () => {
@@ -29,7 +29,7 @@ export const SpotDetails = () => {
     state,
     country,
     Owner : {firstName, lastName},
-    SpotImages,
+    //SpotImages,
     numReviews,
     avgStarRating,
     price,
