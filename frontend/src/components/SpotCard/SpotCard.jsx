@@ -14,11 +14,8 @@ export const SpotCard = ({spot: {
 } }) =>{
   const navigate = useNavigate();
 
-  let icon;
-  if(isNaN(avgRating)) icon = <IoMdStarOutline />
-  else {
-    icon = avgRating >= 4 ? <IoMdStar /> : <IoMdStarHalf />
-  }
+  const icon = avgRating >= 4 || avgRating == 0 ? <IoMdStar /> : <IoMdStarHalf />
+
 
   const handleError = (e) => {
     e.target.onerror = null;
@@ -48,7 +45,7 @@ export const SpotCard = ({spot: {
           style={{display:'flex', alignItems: "center"}}
           >
             {icon}
-            {`${avgRating}/5`}</p>
+            {avgRating ? `${avgRating.toFixed(1)}` : 'New'}</p>
         </li>
         <li
         id="price"

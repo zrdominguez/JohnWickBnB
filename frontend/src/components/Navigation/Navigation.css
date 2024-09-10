@@ -22,10 +22,11 @@ nav ul{
 }
 
 .profile-dropdown{
-  display: block;
-  padding-left: 0px;
-  margin-bottom: 5px;
-  margin-top: 5px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding:5px;
+  margin-top: 1rem;
   background-color: #4f768e;
   box-shadow: 0 0 0 1px #c3ba6d;
   border-radius: 2px;
@@ -33,7 +34,8 @@ nav ul{
   top: 2.75em;              /* Place below the button with some spacing */
   right: 39px;
   z-index: 10;
-  width: 100px;
+  width: fit-content;
+  gap: 5px;
 }
 
 .profile-dropdown.hidden{
@@ -69,11 +71,26 @@ nav ul{
   cursor: pointer;
 }
 
+.logout-btn{
+  align-self: center;
+}
+
+.logout-btn button{
+  border-radius: 2px;
+  box-shadow: 1px 3px;
+  background-color: #c3ba6d;
+}
+
+.logout-btn:hover{
+  font-weight: bold;
+  transform: scale(1.01);
+}
 
 .list-profile-button{
   display: flex;
-  flex-direction: column;
-  font-family: ChigacoFLF, sans-serif;;
+  font-family: sans-serif;
+  gap: 1rem;
+  align-items: center;
 }
 
 .hamburger-icon, .profile-icon{

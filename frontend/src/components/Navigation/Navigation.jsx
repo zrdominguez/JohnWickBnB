@@ -21,6 +21,7 @@ export const Navigation = ({ isLoaded }) => {
           </li>
           {isLoaded && (
             <li className='list-profile-button'>
+              {sessionUser && <NavLink>Create a New Spot</NavLink>}
               <ProfileButton user={sessionUser} className='profile-button'/>
             </li>
           )}

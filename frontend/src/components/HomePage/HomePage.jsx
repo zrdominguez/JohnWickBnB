@@ -12,13 +12,9 @@ export const HomePage = () => {
   const userSpots = useSelector(selectCurrentUserSpots);
   const sessionUser = useSelector(state => state.session.user);
 
-  console.log(userSpots);
-
   useEffect(()=>{
-    if(!sessionUser){
-      dispatch(getSpots())
-    }
-    dispatch(getUserSpots())
+    if(!sessionUser) dispatch(getSpots())
+    else dispatch(getUserSpots())
   }, [dispatch, sessionUser])
 
   return(

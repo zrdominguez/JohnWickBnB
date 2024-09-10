@@ -553,7 +553,7 @@ router.get('/',
 
 
   const spotsWithAvgRating = spots.map(spot => {
-    const avgRating = parseFloat(spot.get('avgRating')) || '-';
+    const avgRating = parseFloat(spot.get('avgRating')) || 0;
     return {
       ...spot.toJSON(),
       avgRating
