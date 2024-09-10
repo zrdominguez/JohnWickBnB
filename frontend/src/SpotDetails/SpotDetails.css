@@ -1,7 +1,11 @@
+.spot-details{
+  padding: 5px;
+}
+
 .flex-container{
   display: flex;
   gap: 2px;
-  padding: 5px;
+  padding: 5px 0 5px 0;
 }
 
 .preview-image{
@@ -45,6 +49,7 @@
   text-align: end;
   display: flex;
   align-items: center;
+  font-weight: bold;
 }
 
 .reserve-cost li{
@@ -80,4 +85,46 @@
 
 body{
   height: fit-content;
+}
+
+.reviews{
+  border-top: 2px solid black;
+  margin-left: 5px;
+  margin-right: 5px;
+}
+
+.reviews ul{
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding-left: 0;
+  gap: 1.5rem;
+}
+
+.reviews li{
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin: 0;
+}
+
+.reviews li h4, p{
+  margin: 0;
+}
+
+.reviews h3{
+  display: flex;
+  align-items: center;
+  margin-top: 15px;
+  margin-bottom: 0;
+}
+
+.date {
+  color: white;
+  opacity: 0.33;
+}
+
+main{
+  max-height: 1000px;
 }

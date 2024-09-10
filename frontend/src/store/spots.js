@@ -4,8 +4,10 @@ import { createSelector } from 'reselect';
 const LOAD_SPOTS = 'spots/LOAD_SPOTS';
 const LOAD_CURRENT_USER_SPOTS = 'spots/LOAD_CURRENT_USER_SPOTS';
 const LOAD_SPOT_BY_ID = 'spots/LOAD_SPOT_BY_ID';
+const LOAD_REVIEWS_OF_SPOT = 'spots/LOAD_REVIEWS_OF_SPOT';
 
 //action creators
+
 export const loadSpots = spots => (
   {
     type: LOAD_SPOTS,
@@ -27,7 +29,15 @@ export const loadSpotById = spot => (
   }
 )
 
+export const loadReviewsOfSpot = reviews =>(
+  {
+    type: LOAD_REVIEWS_OF_SPOT,
+    reviews
+  }
+)
+
 //thunk action creators
+
 export const getSpots = () => async dispatch => {
   const res = await csrfFetch('/api/spots');
 
@@ -55,6 +65,15 @@ export const getSpotById = spotId => async dispatch => {
   }
 }
 
+export const getSpotReviews = spotId => async dispatch => {
+  const res = await csrfFetch(`/api/spots/${spotId}/reviews`);
+
+  if(res.ok){
+    const reviews = await res.json()
+    dispatch(loadReviewsOfSpot(reviews.Reviews))
+  }
+}
+
 //selectors
 
 export const selectSpot = state => state.spot;
@@ -68,7 +87,6 @@ export const selectCurrentUserSpots = createSelector(selectSpot, spot =>
 export const selectSpotById = createSelector([selectSpot, (state, id) => id],
   (spot, id) => spot.allSpots[id]
 )
-
 
 //reducer
 
@@ -96,6 +114,27 @@ const spotReducer = (state = initialState, action) => {
       return {
         ...state,
         allSpots: { ...state.allSpots, [spot.id]: spot }
+      }
+    }
+    case LOAD_REVIEWS_OF_SPOT: {
+      const reviews = action.reviews;
+      const spotId = reviews[0].spotId
+      const allReviews = {}
+      if(reviews.length > 0){
+        reviews.forEach(review => {
+          allReviews[review.id] = review
+        })
+      }
+
+      return {
+        ...state,
+        allSpots: {
+          ...state.allSpots,
+          [spotId]: {
+            ...state.allSpots[spotId],
+            reviews: allReviews,
+          }
+        }
       }
     }
     default:
