@@ -4,5 +4,36 @@
 }
 
 .image-container{
-  width:auto
+  width:auto;
+}
+
+.flex-item {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  border: 1px solid #c3ba6d;
+  border-radius: 4px;
+  flex: 1 1 25%;
+  padding: 10px;
+  height: fit-content;
+  position: relative;
+}
+
+.flex-item img{
+  max-width: 100%;
+  max-height: 325px;
+  min-width: 0;
+  min-height: 0;
+  cursor: pointer;
+}
+
+.flex-item ul{
+  padding: 0;
+  list-style: none;
+  padding: auto;
+  width: 100%;
+  display:flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 0;
 }

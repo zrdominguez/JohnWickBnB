@@ -5,7 +5,7 @@ import { useEffect } from "react";
 import './SpotDetails.css';
 import { IoMdStar } from "react-icons/io";
 import { IoMdStarHalf } from "react-icons/io";
-import { IoMdStarOutline } from "react-icons/io";
+//import { IoMdStarOutline } from "react-icons/io";
 import SpotReviewList from "../components/SpotReviewList";
 
 export const SpotDetails = () => {
@@ -13,12 +13,14 @@ export const SpotDetails = () => {
   const dispatch = useDispatch();
   const spot = useSelector(state => selectSpotById(state, spotId))
 
+  console.log(spot)
+
   useEffect( () => {
     dispatch(getSpotById(spotId))
   }, [dispatch, spotId])
 
   useEffect( () => {
-    if(spot && spot.numReviews) dispatch(getSpotReviews(spotId))
+    if(spot?.numReviews) dispatch(getSpotReviews(spotId))
   }, [dispatch, spotId, spot?.numReviews])
 
   if(!spot || !spot.Owner || !spot.SpotImages) return <h3>Loading...</h3>
@@ -37,6 +39,15 @@ export const SpotDetails = () => {
   } = spot
 
     const icon = avgStarRating >= 4 || avgStarRating == 0 ? <IoMdStar /> : <IoMdStarHalf />
+    const previewImage = SpotImages.find(image => image.preview);
+    const amenitiesPic = SpotImages.filter(image => !image.preview);
+    let pics =[];
+    for(let i = 0; i < 4; ++i){
+      pics[i] = amenitiesPic[i] ? amenitiesPic[i] : 'https://st4.depositphotos.com/14953852/24787/v/380/depositphotos_247872612-stock-illustration-no-image-available-icon-vector.jpg';
+      console.log(pics[i])
+    }
+
+    console.log('hello', pics);
 
 
   return(
@@ -46,13 +57,12 @@ export const SpotDetails = () => {
         <p>{`${city}, ${state}, ${country}`}</p>
         <section className="flex-container">
           <div className="preview-image">
-            <img src="https://images.pexels.com/photos/106399/pexels-photo-106399.jpeg"/>
+            <img src={previewImage ? previewImage.url : 'https://st4.depositphotos.com/14953852/24787/v/380/depositphotos_247872612-stock-illustration-no-image-available-icon-vector.jpg'}/>
           </div>
           <div className="grid-container">
-            <img className="grid-item" src= 'https://images.pexels.com/photos/106399/pexels-photo-106399.jpeg'/>
-            <img className="grid-item" src= 'https://images.pexels.com/photos/106399/pexels-photo-106399.jpeg'/>
-            <img className="grid-item" src= 'https://images.pexels.com/photos/106399/pexels-photo-106399.jpeg'/>
-            <img className="grid-item" src= 'https://images.pexels.com/photos/106399/pexels-photo-106399.jpeg'/>
+          {pics.map((pic, index) => (
+              <img className="grid-item" src= {pic.url ? pic.url: pic} key={pic.id ? pic.id : index}/>
+            ))}
           </div>
         </section>
         <section className="reserve-info">
