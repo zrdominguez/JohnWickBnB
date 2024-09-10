@@ -5,6 +5,10 @@ import * as sessionActions from '../../store/session';
 import OpenModalMenuItem from './OpenModalMenuItem';
 import LoginFormModal from '../LoginFormModal';
 import SignupFormModal from '../SignupFormModal';
+import { GiHamburgerMenu } from "react-icons/gi";
+import { LuLogIn } from "react-icons/lu";
+import { LuPencil } from "react-icons/lu";
+
 
 export const ProfileButton = ({ user }) => {
   const dispatch = useDispatch();
@@ -12,7 +16,7 @@ export const ProfileButton = ({ user }) => {
   const ulRef = useRef();
 
   const toggleMenu = (e) => {
-    e.stopPropagation(); // Keep from bubbling up to document and triggering closeMenu
+    e.stopPropagation();
     setShowMenu(!showMenu);
   };
 
@@ -42,8 +46,9 @@ export const ProfileButton = ({ user }) => {
 
   return (
     <>
-      <button onClick={toggleMenu}>
-        <FaUserCircle />
+      <button onClick={toggleMenu} className='profile-button'>
+        <GiHamburgerMenu className='hamburger-icon' size={20} style={{color: '#c3ba6d'}}/>
+        <FaUserCircle className='profile-icon' size={20}  style={{color: '#c3ba6d'}}/>
       </button>
       <ul className={ulClassName} ref={ulRef}>
         {user ? (
@@ -51,18 +56,20 @@ export const ProfileButton = ({ user }) => {
             <li>{user.username}</li>
             <li>{user.firstName} {user.lastName}</li>
             <li>{user.email}</li>
-            <li>
+            <li className='logout-btn'>
               <button onClick={logout}>Log Out</button>
             </li>
           </>
         ) : (
           <>
             <OpenModalMenuItem
+              itemIcon={<LuLogIn />}
               itemText="Log In"
               onItemClick={closeMenu}
               modalComponent={<LoginFormModal />}
             />
             <OpenModalMenuItem
+              itemIcon={<LuPencil />}
               itemText="Sign Up"
               onItemClick={closeMenu}
               modalComponent={<SignupFormModal />}

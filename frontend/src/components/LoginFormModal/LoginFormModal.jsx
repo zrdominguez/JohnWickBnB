@@ -11,6 +11,17 @@ export const LoginFormModal = () => {
   const [errors, setErrors] = useState({});
   const { closeModal } = useModal();
 
+  const handleDemo = () => {
+    const demo = {
+      credential:'Demo-lition',
+      password:'password',
+    }
+
+    return dispatch(sessionActions.login(demo))
+    .then(closeModal)
+  }
+
+
   const handleSubmit = (e) => {
     e.preventDefault();
     setErrors({});
@@ -26,22 +37,22 @@ export const LoginFormModal = () => {
 
   return (
     <>
-      <h1>Log In</h1>
       <form onSubmit={handleSubmit}>
+        <h1 >Log In</h1>
         <label>
-          Username or Email
           <input
             type="text"
             value={credential}
+            placeholder='Username or Email'
             onChange={(e) => setCredential(e.target.value)}
             required
           />
         </label>
         <label>
-          Password
           <input
             type="password"
             value={password}
+            placeholder='Password'
             onChange={(e) => setPassword(e.target.value)}
             required
           />
@@ -49,7 +60,12 @@ export const LoginFormModal = () => {
         {errors.credential && (
           <p>{errors.credential}</p>
         )}
-        <button type="submit">Log In</button>
+        <button type="submit" className='login-button'>Log In</button>
+        <a
+        className='demo-user'
+        onClick={handleDemo}>
+          Demo-User
+        </a>
       </form>
     </>
   );

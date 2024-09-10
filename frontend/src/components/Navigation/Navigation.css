@@ -1,3 +1,98 @@
+nav{
+  margin-top: 0px;
+  overflow: visible;
+  padding-left: 20px;
+  padding-right: 20px;
+}
+
+header{
+  width: 100%;
+  height: 70px;
+  border-bottom: 2px solid lightgray;
+  background-color: #020a15;
+}
+
+nav ul{
+  list-style-type: none;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-right: 18px;
+  margin: 0;
+}
+
+.profile-dropdown{
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding:5px;
+  margin-top: 1rem;
+  background-color: #4f768e;
+  box-shadow: 0 0 0 1px #c3ba6d;
+  border-radius: 2px;
+  position: absolute;                 /* Position absolutely relative to button */
+  top: 2.75em;              /* Place below the button with some spacing */
+  right: 39px;
+  z-index: 10;
+  width: fit-content;
+  gap: 5px;
+}
+
 .profile-dropdown.hidden{
   visibility: hidden;
+}
+
+.profile-dropdown li{
+  color: #1a42a0;
+  float: left;
+  gap: 5px;
+  padding-left: 5px;
+}
+
+.profile-button{
+  display: flex;
+  justify-content: space-evenly;
+  border-radius: 8px;
+  border-style: solid;
+  border-color:white;
+  padding: 0;
+  background-color: #020a15;
+  position: relative;
+  cursor: pointer;
+}
+
+.home-link{
+  text-decoration: none;
+  color: #c3ba6d;
+  display: flex;
+  align-items: center;
+  font-weight: bold;
+  font-family: sans-serif;
+  cursor: pointer;
+}
+
+.logout-btn{
+  align-self: center;
+}
+
+.logout-btn button{
+  border-radius: 2px;
+  box-shadow: 1px 3px;
+  background-color: #c3ba6d;
+}
+
+.logout-btn:hover{
+  font-weight: bold;
+  transform: scale(1.01);
+}
+
+.list-profile-button{
+  display: flex;
+  font-family: sans-serif;
+  gap: 1rem;
+  align-items: center;
+}
+
+.hamburger-icon, .profile-icon{
+  margin: 2px;
 }

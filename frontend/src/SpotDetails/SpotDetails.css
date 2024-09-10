@@ -1,0 +1,130 @@
+.spot-details{
+  padding: 5px;
+}
+
+.flex-container{
+  display: flex;
+  gap: 2px;
+  padding: 5px 0 5px 0;
+}
+
+.preview-image{
+  flex: 1;
+  overflow: hidden;
+}
+
+.preview-image img, .grid-container img{
+  height: auto;
+  object-fit: contain;
+  max-width: 100%;
+  display: block;
+}
+
+.grid-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+  flex: 1;
+  gap: 2px;
+}
+
+.reserve-info{
+  display: flex;
+  padding: 5px
+}
+
+.host-info{
+  flex: 2;
+}
+
+.reserve-cost{
+  border: 1px solid black;
+  border-radius: 5px;
+  height: fit-content;
+  padding : 10px;
+  flex: 1;
+}
+
+.reserve-cost p{
+  text-align: end;
+  display: flex;
+  align-items: center;
+  font-weight: bold;
+}
+
+.reserve-cost li{
+  width: 100%;
+}
+
+.reserve-cost ul{
+  list-style-type: none;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  margin: 0;
+}
+
+.reserve-button{
+  width: 100%;
+  background-color: #c3ba6d;
+  height: 30px;
+  box-shadow: 1px 3px;
+}
+
+.reserve-button:hover{
+  font-weight: bold;
+  transform: scale(1.01);
+}
+
+.price-review{
+  display: flex;
+  justify-content: space-between;
+}
+
+body{
+  height: fit-content;
+}
+
+.reviews{
+  border-top: 2px solid black;
+  margin-left: 5px;
+  margin-right: 5px;
+}
+
+.reviews ul{
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding-left: 0;
+  gap: 1.5rem;
+}
+
+.reviews li{
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin: 0;
+}
+
+.reviews li h4, p{
+  margin: 0;
+}
+
+.reviews h3{
+  display: flex;
+  align-items: center;
+  margin-top: 15px;
+  margin-bottom: 0;
+}
+
+.date {
+  color: white;
+  opacity: 0.33;
+}
+
+main{
+  max-height: 1000px;
+}

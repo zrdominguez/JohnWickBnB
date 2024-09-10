@@ -5,10 +5,12 @@ import {
   compose
 } from 'redux';
 import sessionReducer from './session';
+import spotReducer from './spots';
 import { thunk } from 'redux-thunk';
 
 const rootReducer = combineReducers({
-  session: sessionReducer
+  session: sessionReducer,
+  spot: spotReducer
 });
 
 let enhancer;

@@ -1,19 +1,50 @@
-h1 {
-  text-align: center;
-}
-
 form {
   text-align: right;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 10px;
+  position: relative;
+  margin: 20px;
+  font-family: sans-serif;
+}
+
+#modal-content{
+  top: 100px;
+  border-radius: 5px;
+  background-color: rgb(188, 192, 217);
+  margin-left: auto;
+  margin-right: auto;
+}
+
+form h1 {
+  text-align: center;
+  margin: 0;
 }
 
 label {
-  margin: 10px;
+  padding: 6px 0px 6px;
 }
 
-label>input {
-  margin: 5px
+::placeholder{
+  color: #1a42a0;
 }
 
-button:hover{
+.login-button{
+  background-color: #c3ba6d;
+  width: 100%;
+  height: 30px;
+  box-shadow: 1px 3px;
+  margin: 5px;
+}
+
+.login-button:hover{
   font-weight: bold;
+  transform: scale(1.01);
+}
+
+.demo-user{
+  margin-top: 20px;
+  color: #1a42a0;
+  text-decoration: underline;
 }
