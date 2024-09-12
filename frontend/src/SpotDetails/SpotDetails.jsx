@@ -51,7 +51,7 @@ export const SpotDetails = () => {
 
 
   return(
-    <main>
+    <div className="spot-container">
       <div className="spot-details">
         <h2>{name}</h2>
         <p>{`${city}, ${state}, ${country}`}</p>
@@ -75,7 +75,7 @@ export const SpotDetails = () => {
               <li className="price-review">
                 <h3>{`$${price} night`}</h3>
                 <p>{icon}{numReviews ?
-                `${avgStarRating.toFixed(1)} - ${numReviews} reviews` : 'New'}
+                `${avgStarRating.toFixed(1)} - ${numReviews} ${numReviews > 1 ? 'reviews' : 'review'}` : 'New'}
                 </p>
               </li>
               <li>
@@ -94,7 +94,7 @@ export const SpotDetails = () => {
           (
           <>
             <h3>{icon}&nbsp;{numReviews ?
-            `${avgStarRating.toFixed(1)} - ${numReviews} reviews` : 'New'}
+            `${avgStarRating.toFixed(1)} - ${numReviews} ${numReviews > 1 ? 'reviews' : 'review'}` : 'New'}
             </h3>
             <div className="review-container">
               <ul>
@@ -112,6 +112,6 @@ export const SpotDetails = () => {
         }
 
       </div>
-    </main>
+    </div>
   )
 }

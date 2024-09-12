@@ -44,14 +44,14 @@ module.exports = {
         createdAt: new Date(),
         updatedAt: new Date()
       },
-      {
-        userId: 2,
-        spotId: 2,
-        review: 'This place felt like the kind of spot where you come to regroup, to rethink, and maybe even to make amends. The walls seemed to echo with the unspoken rules of an unspoken world—no business on the premises, but everyone knows that’s just a suggestion. It’s not the plush luxury of the Continental, but it has a certain appeal for those who live between the lines of the law. It’s rough around the edges, much like the man himself. Four stars, because it’s not about the frills; it’s about the fight.',
-        stars: 4,
-        createdAt: new Date(),
-        updatedAt: new Date()
-      }
+      // {
+      //   userId: 2,
+      //   spotId: 2,
+      //   review: 'This place felt like the kind of spot where you come to regroup, to rethink, and maybe even to make amends. The walls seemed to echo with the unspoken rules of an unspoken world—no business on the premises, but everyone knows that’s just a suggestion. It’s not the plush luxury of the Continental, but it has a certain appeal for those who live between the lines of the law. It’s rough around the edges, much like the man himself. Four stars, because it’s not about the frills; it’s about the fight.',
+      //   stars: 4,
+      //   createdAt: new Date(),
+      //   updatedAt: new Date()
+      // }
     ], { validate: true });
   },
 

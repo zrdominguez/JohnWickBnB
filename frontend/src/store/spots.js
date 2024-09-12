@@ -5,7 +5,8 @@ const LOAD_SPOTS = 'spots/LOAD_SPOTS';
 const LOAD_CURRENT_USER_SPOTS = 'spots/LOAD_CURRENT_USER_SPOTS';
 const LOAD_SPOT_BY_ID = 'spots/LOAD_SPOT_BY_ID';
 const LOAD_REVIEWS_OF_SPOT = 'spots/LOAD_REVIEWS_OF_SPOT';
-
+const CREATE_SPOT = 'spots/CREATE_SPOT';
+const CREATE_SPOT_IMAGE = 'spots/CREATE_SPOT_IMAGE';
 //action creators
 
 export const loadSpots = spots => (
@@ -33,6 +34,20 @@ export const loadReviewsOfSpot = reviews =>(
   {
     type: LOAD_REVIEWS_OF_SPOT,
     reviews
+  }
+)
+
+export const createSpot = spot => (
+  {
+    type: CREATE_SPOT,
+    spot
+  }
+)
+
+export const createSpotImage = image => (
+  {
+    type: CREATE_SPOT_IMAGE,
+    image
   }
 )
 
@@ -72,6 +87,33 @@ export const getSpotReviews = spotId => async dispatch => {
     const reviews = await res.json()
     dispatch(loadReviewsOfSpot(reviews.Reviews))
   }
+}
+
+export const addASpot = spot => async dispatch => {
+  const res = await csrfFetch('/api/spots', {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body : JSON.stringify(spot)
+  })
+
+  const newSpot = await res.json();
+  if(res.ok){
+    dispatch(createSpot(newSpot))
+  }return newSpot;
+}
+
+export const addSpotImage = (spotId, image) => async dispatch => {
+  const res = await csrfFetch(`/api/spots/${spotId}/images`,{
+      method:'POST',
+      headers: {'Content-Type': 'application/json'},
+      body : JSON.stringify(image)
+    }
+  )
+
+  const newImage = await res.json();
+  if(res.ok){
+    dispatch(createSpotImage(newImage))
+  }return newImage;
 }
 
 //selectors
@@ -134,6 +176,16 @@ const spotReducer = (state = initialState, action) => {
             ...state.allSpots[spotId],
             reviews: allReviews,
           }
+        }
+      }
+    }
+    case CREATE_SPOT:{
+      const spotId = action.spot.id;
+      return {
+        ...state,
+        allSpots : {
+          ...state.allSpots,
+          [spotId]: action.spot
         }
       }
     }

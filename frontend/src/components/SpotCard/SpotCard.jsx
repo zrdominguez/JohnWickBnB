@@ -31,6 +31,7 @@ export const SpotCard = ({spot: {
   return (
     <div className="flex-item">
       <div className='image-container'>
+        {loaded || <h2>Loading...</h2>}
         <img
         style={loaded ? {} : {display:'none'}}
         src={previewImage}
