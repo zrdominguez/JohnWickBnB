@@ -1,12 +1,14 @@
 import { useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { getSpotById, getSpotReviews, selectSpotById } from "../../store/spots";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import './SpotDetails.css';
 import { IoMdStar } from "react-icons/io";
 import { IoMdStarHalf } from "react-icons/io";
 import SpotReviewList from "../../components/SpotReviewList";
 import { selectUserReviews } from "../../store/reviews";
+import OpenModalMenuItem from "../Navigation/OpenModalMenuItem";
+import { PostReviewModal } from "../PostReviewModal/PostReviewModal";
 
 export const SpotDetails = () => {
   const { spotId } = useParams();
@@ -14,11 +16,16 @@ export const SpotDetails = () => {
   const spot = useSelector(state => selectSpotById(state, spotId))
   const sessionUser = useSelector(state => state.session.user);
   const reviews = useSelector(selectUserReviews);
-  let displayNone = false;
+  const [displayNone, setDisplayNone] = useState(false);
 
-  reviews.forEach(review => {
-    if(spotId == review.spotId) displayNone = true;
-  })
+  console.log(reviews)
+
+  useEffect(()=>{
+    reviews.forEach(review => {
+      if(spotId == review.spotId) setDisplayNone(true);
+    })
+  },[spotId, displayNone, reviews])
+
 
   useEffect( () => {
     dispatch(getSpotById(spotId))
@@ -97,7 +104,11 @@ export const SpotDetails = () => {
           <button
           id="post-review-btn"
           style={{display: displayNone ? 'none': 'flex'}}
-          >Post a Review
+          >
+            <OpenModalMenuItem
+            itemText="Post a review"
+            modalComponent={<PostReviewModal spotId={spotId} setDisplayNone={setDisplayNone}/>}
+            />
           </button>
           : null
         }

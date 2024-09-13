@@ -25,10 +25,6 @@ export const getUserReviews = () => async dispatch => {
 const selectReview = state => state.review
 export const selectUserReviews = createSelector(selectReview, review => Object.values(review.userReviews));
 
-export const selectReviewByUserId = createSelector([selectReview, (state, id) => id],
-  (reviews, id) => Object.values(reviews.userReviews).filter(review => review.User.id == id)
-)
-
 //reducer
 const initialState = {userReviews:{}}
 
