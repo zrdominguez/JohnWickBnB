@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router-dom';
 import './SpotCard.css'
 import { IoMdStar } from "react-icons/io";
 import { IoMdStarHalf } from "react-icons/io";
-//import { IoMdStarOutline } from "react-icons/io";
 
 export const SpotCard = ({spot: {
   id,

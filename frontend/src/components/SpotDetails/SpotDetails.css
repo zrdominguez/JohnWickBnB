@@ -77,10 +77,20 @@
   width: 100%;
   background-color: #c3ba6d;
   height: 30px;
+  border-radius: 3px;
   box-shadow: 1px 3px;
+  cursor: pointer;
 }
 
-.reserve-button:hover{
+#post-review-btn{
+  box-shadow: 1px 3px;
+  background-color:#c3ba6d;
+  border-radius: 3px;
+  margin-top: 10px;
+  cursor: pointer;
+}
+
+.reserve-button:hover, #post-review-btn:hover{
   font-weight: bold;
   transform: scale(1.01);
 }

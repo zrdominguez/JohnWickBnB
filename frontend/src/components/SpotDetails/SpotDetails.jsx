@@ -1,19 +1,24 @@
 import { useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { getSpotById, getSpotReviews, selectSpotById } from "../store/spots";
+import { getSpotById, getSpotReviews, selectSpotById } from "../../store/spots";
 import { useEffect } from "react";
 import './SpotDetails.css';
 import { IoMdStar } from "react-icons/io";
 import { IoMdStarHalf } from "react-icons/io";
-//import { IoMdStarOutline } from "react-icons/io";
-import SpotReviewList from "../components/SpotReviewList";
+import SpotReviewList from "../../components/SpotReviewList";
+import { selectUserReviews } from "../../store/reviews";
 
 export const SpotDetails = () => {
   const { spotId } = useParams();
   const dispatch = useDispatch();
   const spot = useSelector(state => selectSpotById(state, spotId))
+  const sessionUser = useSelector(state => state.session.user);
+  const reviews = useSelector(selectUserReviews);
+  let displayNone = false;
 
-  console.log(spot)
+  reviews.forEach(review => {
+    if(spotId == review.spotId) displayNone = true;
+  })
 
   useEffect( () => {
     dispatch(getSpotById(spotId))
@@ -44,11 +49,7 @@ export const SpotDetails = () => {
     let pics =[];
     for(let i = 0; i < 4; ++i){
       pics[i] = amenitiesPic[i] ? amenitiesPic[i] : 'https://st4.depositphotos.com/14953852/24787/v/380/depositphotos_247872612-stock-illustration-no-image-available-icon-vector.jpg';
-      console.log(pics[i])
     }
-
-    console.log('hello', pics);
-
 
   return(
     <div className="spot-container">
@@ -89,13 +90,21 @@ export const SpotDetails = () => {
         </section>
       </div>
       <div className="reviews">
+        <h3>{icon}&nbsp;{numReviews ?
+          `${avgStarRating.toFixed(1)} - ${numReviews} ${numReviews > 1 ? 'reviews' : 'review'}` : 'New'}
+        </h3>
+        {sessionUser && sessionUser.id != spot.ownerId ?
+          <button
+          id="post-review-btn"
+          style={{display: displayNone ? 'none': 'flex'}}
+          >Post a Review
+          </button>
+          : null
+        }
         {numReviews && !spot.reviews ?
           <div>Loading...</div>:
           (
           <>
-            <h3>{icon}&nbsp;{numReviews ?
-            `${avgStarRating.toFixed(1)} - ${numReviews} ${numReviews > 1 ? 'reviews' : 'review'}` : 'New'}
-            </h3>
             <div className="review-container">
               <ul>
                 {
