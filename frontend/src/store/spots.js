@@ -5,6 +5,9 @@ const LOAD_SPOTS = 'spots/LOAD_SPOTS';
 const LOAD_CURRENT_USER_SPOTS = 'spots/LOAD_CURRENT_USER_SPOTS';
 const LOAD_SPOT_BY_ID = 'spots/LOAD_SPOT_BY_ID';
 const LOAD_REVIEWS_OF_SPOT = 'spots/LOAD_REVIEWS_OF_SPOT';
+const CREATE_SPOT = 'spots/CREATE_SPOT';
+const CREATE_SPOT_IMAGE = 'spots/CREATE_SPOT_IMAGE';
+const CREATE_REVIEW = 'spots/CREATE_REVIEW'
 
 //action creators
 
@@ -33,6 +36,27 @@ export const loadReviewsOfSpot = reviews =>(
   {
     type: LOAD_REVIEWS_OF_SPOT,
     reviews
+  }
+)
+
+export const createSpot = spot => (
+  {
+    type: CREATE_SPOT,
+    spot
+  }
+)
+
+export const createSpotImage = image => (
+  {
+    type: CREATE_SPOT_IMAGE,
+    image
+  }
+)
+
+export const createReview = review => (
+  {
+    type: CREATE_REVIEW,
+    review
   }
 )
 
@@ -71,6 +95,46 @@ export const getSpotReviews = spotId => async dispatch => {
   if(res.ok){
     const reviews = await res.json()
     dispatch(loadReviewsOfSpot(reviews.Reviews))
+  }
+}
+
+export const addASpot = spot => async dispatch => {
+  const res = await csrfFetch('/api/spots', {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body : JSON.stringify(spot)
+  })
+
+  const newSpot = await res.json();
+  if(res.ok){
+    dispatch(createSpot(newSpot))
+  }return newSpot;
+}
+
+export const addSpotImage = (spotId, image) => async dispatch => {
+  const res = await csrfFetch(`/api/spots/${spotId}/images`,{
+      method:'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify(image)
+    }
+  )
+
+  const newImage = await res.json();
+  if(res.ok){
+    dispatch(createSpotImage(newImage))
+  }return newImage;
+}
+
+export const addAReview = (spotId, review) => async dispatch => {
+  const res = await csrfFetch(`/api/spots/${spotId}/reviews`, {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify(review)
+  })
+
+  if(res.ok){
+    const newReview = await res.json();
+    dispatch(createReview(newReview))
   }
 }
 
@@ -136,6 +200,30 @@ const spotReducer = (state = initialState, action) => {
           }
         }
       }
+    }
+    case CREATE_SPOT:{
+      const spotId = action.spot.id;
+      return {
+        ...state,
+        allSpots : {
+          ...state.allSpots,
+          [spotId]: action.spot
+        }
+      }
+    }
+    case CREATE_REVIEW:{
+      const {spotId, review} = action.review
+      const currentReviews = state.allSpots[spotId]?.reviews || [];
+      return {
+        ...state,
+        allSpots: {
+          ...state.allSpots,
+          [spotId]: {
+            ...state.allSpots[spotId],
+            reviews: [...currentReviews, review],
+          },
+        },
+      };
     }
     default:
       return state;

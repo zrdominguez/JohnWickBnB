@@ -1,24 +1,43 @@
 import { useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { getSpotById, getSpotReviews, selectSpotById } from "../store/spots";
-import { useEffect } from "react";
+import { getSpotById, getSpotReviews, selectSpotById } from "../../store/spots";
+import { useEffect, useState } from "react";
 import './SpotDetails.css';
 import { IoMdStar } from "react-icons/io";
 import { IoMdStarHalf } from "react-icons/io";
+<<<<<<< HEAD:frontend/src/SpotDetails/SpotDetails.jsx
 //import { IoMdStarOutline } from "react-icons/io";
 import SpotReviewList from "../components/SpotReviewList";
+=======
+import SpotReviewList from "../../components/SpotReviewList";
+import { selectUserReviews } from "../../store/reviews";
+import OpenModalMenuItem from "../Navigation/OpenModalMenuItem";
+import { PostReviewModal } from "../PostReviewModal/PostReviewModal";
+>>>>>>> dev:frontend/src/components/SpotDetails/SpotDetails.jsx
 
 export const SpotDetails = () => {
   const { spotId } = useParams();
   const dispatch = useDispatch();
   const spot = useSelector(state => selectSpotById(state, spotId))
+  const sessionUser = useSelector(state => state.session.user);
+  const reviews = useSelector(selectUserReviews);
+  const [displayNone, setDisplayNone] = useState(false);
+
+  console.log(reviews)
+
+  useEffect(()=>{
+    reviews.forEach(review => {
+      if(spotId == review.spotId) setDisplayNone(true);
+    })
+  },[spotId, displayNone, reviews])
+
 
   useEffect( () => {
     dispatch(getSpotById(spotId))
   }, [dispatch, spotId])
 
   useEffect( () => {
-    if(spot && spot.numReviews) dispatch(getSpotReviews(spotId))
+    if(spot?.numReviews) dispatch(getSpotReviews(spotId))
   }, [dispatch, spotId, spot?.numReviews])
 
   if(!spot || !spot.Owner || !spot.SpotImages) return <h3>Loading...</h3>
@@ -37,22 +56,26 @@ export const SpotDetails = () => {
   } = spot
 
     const icon = avgStarRating >= 4 || avgStarRating == 0 ? <IoMdStar /> : <IoMdStarHalf />
-
+    const previewImage = SpotImages.find(image => image.preview);
+    const amenitiesPic = SpotImages.filter(image => !image.preview);
+    let pics =[];
+    for(let i = 0; i < 4; ++i){
+      pics[i] = amenitiesPic[i] ? amenitiesPic[i] : 'https://st4.depositphotos.com/14953852/24787/v/380/depositphotos_247872612-stock-illustration-no-image-available-icon-vector.jpg';
+    }
 
   return(
-    <main>
+    <div className="spot-container">
       <div className="spot-details">
         <h2>{name}</h2>
         <p>{`${city}, ${state}, ${country}`}</p>
         <section className="flex-container">
           <div className="preview-image">
-            <img src="https://images.pexels.com/photos/106399/pexels-photo-106399.jpeg"/>
+            <img src={previewImage ? previewImage.url : 'https://st4.depositphotos.com/14953852/24787/v/380/depositphotos_247872612-stock-illustration-no-image-available-icon-vector.jpg'}/>
           </div>
           <div className="grid-container">
-            <img className="grid-item" src= 'https://images.pexels.com/photos/106399/pexels-photo-106399.jpeg'/>
-            <img className="grid-item" src= 'https://images.pexels.com/photos/106399/pexels-photo-106399.jpeg'/>
-            <img className="grid-item" src= 'https://images.pexels.com/photos/106399/pexels-photo-106399.jpeg'/>
-            <img className="grid-item" src= 'https://images.pexels.com/photos/106399/pexels-photo-106399.jpeg'/>
+          {pics.map((pic, index) => (
+              <img className="grid-item" src= {pic.url ? pic.url: pic} key={pic.id ? pic.id : index}/>
+            ))}
           </div>
         </section>
         <section className="reserve-info">
@@ -65,7 +88,7 @@ export const SpotDetails = () => {
               <li className="price-review">
                 <h3>{`$${price} night`}</h3>
                 <p>{icon}{numReviews ?
-                `${avgStarRating.toFixed(1)} - ${numReviews} reviews` : 'New'}
+                `${avgStarRating.toFixed(1)} - ${numReviews} ${numReviews > 1 ? 'reviews' : 'review'}` : 'New'}
                 </p>
               </li>
               <li>
@@ -79,13 +102,25 @@ export const SpotDetails = () => {
         </section>
       </div>
       <div className="reviews">
+        <h3>{icon}&nbsp;{numReviews ?
+          `${avgStarRating.toFixed(1)} - ${numReviews} ${numReviews > 1 ? 'reviews' : 'review'}` : 'New'}
+        </h3>
+        {sessionUser && sessionUser.id != spot.ownerId ?
+          <button
+          id="post-review-btn"
+          style={{display: displayNone ? 'none': 'flex'}}
+          >
+            <OpenModalMenuItem
+            itemText="Post a review"
+            modalComponent={<PostReviewModal spotId={spotId} setDisplayNone={setDisplayNone}/>}
+            />
+          </button>
+          : null
+        }
         {numReviews && !spot.reviews ?
           <div>Loading...</div>:
           (
           <>
-            <h3>{icon}&nbsp;{numReviews ?
-            `${avgStarRating.toFixed(1)} - ${numReviews} reviews` : 'New'}
-            </h3>
             <div className="review-container">
               <ul>
                 {
@@ -102,6 +137,6 @@ export const SpotDetails = () => {
         }
 
       </div>
-    </main>
+    </div>
   )
 }

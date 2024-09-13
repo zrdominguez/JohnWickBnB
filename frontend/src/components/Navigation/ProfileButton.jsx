@@ -8,11 +8,13 @@ import SignupFormModal from '../SignupFormModal';
 import { GiHamburgerMenu } from "react-icons/gi";
 import { LuLogIn } from "react-icons/lu";
 import { LuPencil } from "react-icons/lu";
+import { useNavigate } from 'react-router-dom';
 
 
 export const ProfileButton = ({ user }) => {
   const dispatch = useDispatch();
   const [showMenu, setShowMenu] = useState(false);
+  const navigate = useNavigate();
   const ulRef = useRef();
 
   const toggleMenu = (e) => {
@@ -40,6 +42,7 @@ export const ProfileButton = ({ user }) => {
     e.preventDefault();
     dispatch(sessionActions.logout());
     closeMenu();
+    navigate('/');
   };
 
   const ulClassName = "profile-dropdown" + (showMenu ? "" : " hidden");
