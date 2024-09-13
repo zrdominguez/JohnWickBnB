@@ -15,6 +15,7 @@ export const PostReviewModal = ({spotId, setDisplayNone}) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    setErrors({});
     const newReview =
     {
       review,

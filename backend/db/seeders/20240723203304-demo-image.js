@@ -69,6 +69,14 @@ module.exports = {
         updatedAt: new Date()
       },
       {
+        imageableType: 'spot',
+        imageableId: 3,
+        url: 'https://www.refinery29.com/images/11529234.jpg?format=webp&width=1090&height=1308&quality=85&crop=5%3A6', // Preview image
+        preview: true,
+        createdAt: new Date(),
+        updatedAt: new Date()
+      },
+      {
         imageableType: 'review',
         imageableId: 1,
         url: 'https://example.com/images/review-1.jpg',

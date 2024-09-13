@@ -5,6 +5,7 @@
   padding: 10px;
   justify-content: flex-start;
   max-width: 100%;
+  align-items: stretch;
 }
 
 /* @media screen and (max-width: 768px) {

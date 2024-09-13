@@ -63,7 +63,9 @@ export const LoginFormModal = () => {
         <button type="submit" className='login-button'>Log In</button>
         <a
         className='demo-user'
-        onClick={handleDemo}>
+        onClick={handleDemo}
+        style={{cursor: 'pointer'}}
+        >
           Demo-User
         </a>
       </form>

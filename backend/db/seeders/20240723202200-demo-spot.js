@@ -47,6 +47,20 @@ module.exports = {
         price: 200,
         createdAt: new Date(),
         updatedAt: new Date()
+      },
+      {
+        ownerId: 2,
+        address: '987 Sub Main St',
+        city: 'Orlando',
+        state: 'Florida',
+        country: 'USA',
+        lat: 35.0943,
+        lng: -110.7315,
+        name: 'Extra Space',
+        description: 'It is an empty room with a lot of space.',
+        price: 10,
+        createdAt: new Date(),
+        updatedAt: new Date()
       }
     ], {validate: true});
   },
