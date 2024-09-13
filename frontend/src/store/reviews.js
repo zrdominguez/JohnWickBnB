@@ -1,17 +1,6 @@
-// import { csrfFetch } from "./csrf";
-// import { createSelector } from 'reselect';
+import { csrfFetch } from "./csrf";
+import { createSelector } from 'reselect';
 
-<<<<<<< HEAD
-// const LOAD_REVIEWS = 'reviews/LOAD_REVIEWS'
-
-// //action creators
-// export const loadReviews = reviews => (
-//   {
-//     type: LOAD_REVIEWS,
-//     reviews
-//   }
-// )
-=======
 const LOAD_USER_REVIEWS = 'reviews/LOAD_USER_REVIEWS'
 
 //action creators
@@ -21,7 +10,6 @@ export const loadReviews = reviews => (
     reviews
   }
 )
->>>>>>> dev
 
 //thunk action creators
 export const getUserReviews = () => async dispatch => {

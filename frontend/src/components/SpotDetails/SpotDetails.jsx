@@ -5,15 +5,10 @@ import { useEffect, useState } from "react";
 import './SpotDetails.css';
 import { IoMdStar } from "react-icons/io";
 import { IoMdStarHalf } from "react-icons/io";
-<<<<<<< HEAD:frontend/src/SpotDetails/SpotDetails.jsx
-//import { IoMdStarOutline } from "react-icons/io";
-import SpotReviewList from "../components/SpotReviewList";
-=======
 import SpotReviewList from "../../components/SpotReviewList";
 import { selectUserReviews } from "../../store/reviews";
 import OpenModalMenuItem from "../Navigation/OpenModalMenuItem";
 import { PostReviewModal } from "../PostReviewModal/PostReviewModal";
->>>>>>> dev:frontend/src/components/SpotDetails/SpotDetails.jsx
 
 export const SpotDetails = () => {
   const { spotId } = useParams();
@@ -48,7 +43,7 @@ export const SpotDetails = () => {
     state,
     country,
     Owner : {firstName, lastName},
-    //SpotImages,
+    SpotImages,
     numReviews,
     avgStarRating,
     price,
