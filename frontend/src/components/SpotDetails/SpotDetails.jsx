@@ -95,7 +95,7 @@ export const SpotDetails = () => {
         </section>
       </div>
       <div className="reviews">
-        <h3>{icon}&nbsp;{numReviews ?
+        <h3>{icon}&nbsp;{numReviews > 0 ?
           `${avgStarRating.toFixed(1)} - ${numReviews} ${numReviews > 1 ? 'reviews' : 'review'}` : 'New'}
         </h3>
         {sessionUser && sessionUser.id != spot.ownerId && !displayNone?
@@ -109,7 +109,7 @@ export const SpotDetails = () => {
           </button>
           : null
         }
-        {numReviews && !spot.reviews ?
+        {numReviews > 0 && !spot.reviews ?
           <div>Loading...</div>:
           (
           <>
