@@ -3,7 +3,7 @@ import { useDispatch } from 'react-redux';
 import './PostReviewModal.css';
 import { IoMdStarOutline } from "react-icons/io";
 import { IoMdStar } from 'react-icons/io';
-import { addAReview, getSpotById, getSpotReviews } from '../../store/spots';
+import { addAReview, getSpotById } from '../../store/spots';
 import { useModal } from '../../context/Modal';
 
 export const PostReviewModal = ({spotId, setDisplayNone}) => {
