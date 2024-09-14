@@ -56,9 +56,18 @@ export const ProfileButton = ({ user }) => {
       <ul className={ulClassName} ref={ulRef}>
         {user ? (
           <>
-            <li>{user.username}</li>
-            <li>{user.firstName} {user.lastName}</li>
+            <li>{`Hello, ${user.firstName}`}</li>
             <li>{user.email}</li>
+            <li
+            onClick={() => navigate('/spots/current')}
+            style={
+              {
+                borderTop: '1px solid black',
+                borderBottom: '1px solid black',
+                cursor: 'pointer',
+              }
+            }
+            >Manage Spots</li>
             <li className='logout-btn'>
               <button onClick={logout}>Log Out</button>
             </li>

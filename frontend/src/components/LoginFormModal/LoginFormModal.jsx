@@ -60,7 +60,10 @@ export const LoginFormModal = () => {
         {errors.credential && (
           <p>{errors.credential}</p>
         )}
-        <button type="submit" className='login-button'>Log In</button>
+        <button
+        type="submit" className='login-button'
+        disabled={credential < 4 || password < 6}
+        >Log In</button>
         <a
         className='demo-user'
         onClick={handleDemo}

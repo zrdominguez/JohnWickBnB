@@ -1,5 +1,6 @@
 import { csrfFetch } from "./csrf";
 import { createSelector } from 'reselect';
+import { getUserReviews } from "./reviews";
 
 const LOAD_SPOTS = 'spots/LOAD_SPOTS';
 const LOAD_CURRENT_USER_SPOTS = 'spots/LOAD_CURRENT_USER_SPOTS';
@@ -7,7 +8,8 @@ const LOAD_SPOT_BY_ID = 'spots/LOAD_SPOT_BY_ID';
 const LOAD_REVIEWS_OF_SPOT = 'spots/LOAD_REVIEWS_OF_SPOT';
 const CREATE_SPOT = 'spots/CREATE_SPOT';
 const CREATE_SPOT_IMAGE = 'spots/CREATE_SPOT_IMAGE';
-const CREATE_REVIEW = 'spots/CREATE_REVIEW'
+const CREATE_REVIEW = 'spots/CREATE_REVIEW';
+const DELETE_SPOT = 'spots/DELETE_SPOT';
 
 //action creators
 
@@ -57,6 +59,13 @@ export const createReview = review => (
   {
     type: CREATE_REVIEW,
     review
+  }
+)
+
+export const deleteSpot = spotId => (
+  {
+    type: DELETE_SPOT,
+    spotId
   }
 )
 
@@ -134,8 +143,20 @@ export const addAReview = (spotId, review) => async dispatch => {
 
   if(res.ok){
     const newReview = await res.json();
-    dispatch(createReview(newReview))
+    await dispatch(createReview(newReview))
+    await dispatch(getUserReviews());
   }
+}
+
+export const removeSpot = spotId => async dispatch => {
+  const res = await csrfFetch(`/api/spots/${spotId}`,
+    {
+      method:'DELETE',
+      headers: {'Content-Type': 'application/json'}
+    }
+  )
+
+  if(res.ok) dispatch(deleteSpot(spotId))
 }
 
 //selectors
@@ -212,18 +233,25 @@ const spotReducer = (state = initialState, action) => {
       }
     }
     case CREATE_REVIEW:{
-      const {spotId, review} = action.review
-      const currentReviews = state.allSpots[spotId]?.reviews || [];
+      const {spotId} = action.review
+      const review = action.review
+      const currentReviews = state.allSpots[spotId].reviews || {};
       return {
         ...state,
         allSpots: {
           ...state.allSpots,
           [spotId]: {
             ...state.allSpots[spotId],
-            reviews: [...currentReviews, review],
+            reviews: {...currentReviews, [review.id]: review},
           },
         },
       };
+    }
+    case DELETE_SPOT:{
+      const {spotId} = action
+      const copyState = { ...state }
+      delete copyState.currentUserSpots[spotId]
+      return copyState;
     }
     default:
       return state;

@@ -20,6 +20,7 @@ export const SpotCard = ({spot: {
 
   const handleError = (e) => {
     e.target.onerror = null;
+    setLoaded(true)
     e.target.src = 'https://st4.depositphotos.com/14953852/24787/v/380/depositphotos_247872612-stock-illustration-no-image-available-icon-vector.jpg';
   };
 

@@ -79,10 +79,12 @@ export const NewSpotForm = () => {
     else{
       console.log(spotResponse)
       const allImages = [previewImg, ...otherImages]
+
       allImages.forEach(async (image, index) => {
         const obj = {url: image, preview: false}
         if(!index) obj.preview = true;
         dispatch(addSpotImage(spotResponse.id, obj))
+        .catch(err => console.error(err))
       })
       navigate(`/spots/${spotResponse.id}`)
     }

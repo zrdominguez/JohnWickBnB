@@ -3,8 +3,9 @@ import { useDispatch } from 'react-redux';
 import './PostReviewModal.css';
 import { IoMdStarOutline } from "react-icons/io";
 import { IoMdStar } from 'react-icons/io';
-import { addAReview, getSpotReviews } from '../../store/spots';
+import { addAReview, getSpotById, getSpotReviews } from '../../store/spots';
 import { useModal } from '../../context/Modal';
+import { getUserReviews } from '../../store/reviews';
 
 export const PostReviewModal = ({spotId, setDisplayNone}) => {
   const dispatch = useDispatch();
@@ -22,7 +23,9 @@ export const PostReviewModal = ({spotId, setDisplayNone}) => {
       stars: rating
     }
     dispatch(addAReview(spotId, newReview))
-    .then(dispatch(getSpotReviews(spotId))).then(setDisplayNone(true)).then(closeModal)
+    .then(dispatch(getSpotById(spotId)))
+    .then(setDisplayNone(true))
+    .then(closeModal)
     .catch(async (res) => {
       const data = await res.json();
       if (data && data.errors) {
@@ -68,7 +71,11 @@ export const PostReviewModal = ({spotId, setDisplayNone}) => {
           </div>
           <p>Stars</p>
         </div>
-        <button type="submit" id='submit-review-btn'>Submit Your Review</button>
+        <button
+        type="submit"
+        id='submit-review-btn'
+        disabled={review.length < 10}
+        >Submit Your Review</button>
       </form>
     </>
   );

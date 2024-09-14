@@ -13,7 +13,7 @@
   padding: 10px;
   height: fit-content;
   position: relative;
-  max-width: 23%;
+  max-width: 25%;
   flex: 1 1 20%;
   max-height: 100%;
   min-height: 100;
@@ -22,7 +22,7 @@
 .flex-item img{
   max-width: 100%;
   height: 200px;
-  min-width: 0;
+  min-width: 50%;
   min-height: 0;
   cursor: pointer;
   object-fit: cover;
@@ -39,4 +39,8 @@
   gap: 10px;
   margin-bottom: 0;
   flex: 1;
+}
+
+.flex-item li {
+  min-width: 0;
 }

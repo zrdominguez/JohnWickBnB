@@ -45,8 +45,10 @@ nav ul{
 .profile-dropdown li{
   color: #1a42a0;
   float: left;
-  gap: 5px;
-  padding-left: 5px;
+  border-top: 1px;
+  border-bottom: 1px;
+  padding-left: 0;
+  width: 100%;
 }
 
 .profile-button{
@@ -72,7 +74,7 @@ nav ul{
 }
 
 .logout-btn{
-  align-self: center;
+  text-align: center;
 }
 
 .logout-btn button{

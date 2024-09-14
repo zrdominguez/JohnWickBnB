@@ -49,7 +49,7 @@ module.exports = {
         updatedAt: new Date()
       },
       {
-        ownerId: 2,
+        ownerId: 3,
         address: '987 Sub Main St',
         city: 'Orlando',
         state: 'Florida',
