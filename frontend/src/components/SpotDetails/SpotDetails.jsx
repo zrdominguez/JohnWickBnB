@@ -80,7 +80,7 @@ export const SpotDetails = () => {
             <ul>
               <li className="price-review">
                 <h3>{`$${price} night`}</h3>
-                <p>{icon}{numReviews ?
+                <p>{icon}{numReviews > 0 ?
                 `${avgStarRating.toFixed(1)} - ${numReviews} ${numReviews > 1 ? 'reviews' : 'review'}` : 'New'}
                 </p>
               </li>
