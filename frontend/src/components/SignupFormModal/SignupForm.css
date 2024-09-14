@@ -1,0 +1,30 @@
+#sign-up{
+  text-align: center;
+  justify-content: center;
+  margin-bottom: 1rem;
+  margin-top: 1rem;
+}
+
+.sign-up-form{
+  display: flex;
+  align-items: center;
+  height: 100%;
+  width: 20rem;
+}
+
+.sign-up-form label{
+  display: flex;
+  width: 100%;
+}
+
+.sign-up-form input{
+  max-width: 100%;
+  width: 100%;
+  object-fit: cover;
+}
+
+#sign-up-btn{
+  margin-top: 0.5rem;
+  width: 100%;
+  height: 2rem;
+}

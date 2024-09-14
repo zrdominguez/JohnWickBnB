@@ -20,6 +20,7 @@ export const SpotCard = ({spot: {
 
   const handleError = (e) => {
     e.target.onerror = null;
+    setLoaded(true)
     e.target.src = 'https://st4.depositphotos.com/14953852/24787/v/380/depositphotos_247872612-stock-illustration-no-image-available-icon-vector.jpg';
   };
 
@@ -30,7 +31,7 @@ export const SpotCard = ({spot: {
   return (
     <div className="flex-item">
       <div className='image-container'>
-        {loaded || <h2>Loading...</h2>}
+        {loaded || <h2 onClick={handleSpotClick} style={{cursor:'pointer'}}>Loading...</h2>}
         <img
         style={loaded ? {} : {display:'none'}}
         src={previewImage}

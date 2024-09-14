@@ -6,10 +6,14 @@ const Months =
 ]
 
 export const SpotReviewList = ({review}) => {
+
+  if(!review) return <div>Loading</div>
+
   const {User: {firstName}, createdAt} = review;
   const date = new Date(createdAt);
   const month = Months[date.getMonth()];
   const year = date.getFullYear()
+
 
   return(
     <li>

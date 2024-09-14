@@ -1,4 +1,3 @@
-import { useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { getSpotById, getSpotReviews, selectSpotById } from "../../store/spots";
 import { useEffect, useState } from "react";
@@ -9,34 +8,37 @@ import SpotReviewList from "../../components/SpotReviewList";
 import { selectUserReviews } from "../../store/reviews";
 import OpenModalMenuItem from "../Navigation/OpenModalMenuItem";
 import { PostReviewModal } from "../PostReviewModal/PostReviewModal";
+import { useParams } from "react-router-dom";
 
 export const SpotDetails = () => {
-  const { spotId } = useParams();
+  const {spotId} = useParams();
   const dispatch = useDispatch();
   const spot = useSelector(state => selectSpotById(state, spotId))
   const sessionUser = useSelector(state => state.session.user);
   const reviews = useSelector(selectUserReviews);
   const [displayNone, setDisplayNone] = useState(false);
 
-  console.log(reviews)
-
-  useEffect(()=>{
-    reviews.forEach(review => {
-      if(spotId == review.spotId) setDisplayNone(true);
-    })
-  },[spotId, displayNone, reviews])
 
 
   useEffect( () => {
-    dispatch(getSpotById(spotId))
+    if(spotId) {
+      dispatch(getSpotById(spotId));
+    }
   }, [dispatch, spotId])
 
   useEffect( () => {
-    if(spot?.numReviews) dispatch(getSpotReviews(spotId))
-  }, [dispatch, spotId, spot?.numReviews])
+    if(spot?.numReviews){
+      dispatch(getSpotReviews(spotId));
+      reviews.forEach(review => {
+        if(spotId == review.spotId) setDisplayNone(true);
+      })
+    }
+
+  }, [dispatch, spotId, spot?.numReviews, reviews])
 
   if(!spot || !spot.Owner || !spot.SpotImages) return <h3>Loading...</h3>
 
+  console.log('display', displayNone)
   const {
     name,
     city,
@@ -100,10 +102,9 @@ export const SpotDetails = () => {
         <h3>{icon}&nbsp;{numReviews ?
           `${avgStarRating.toFixed(1)} - ${numReviews} ${numReviews > 1 ? 'reviews' : 'review'}` : 'New'}
         </h3>
-        {sessionUser && sessionUser.id != spot.ownerId ?
+        {sessionUser && sessionUser.id != spot.ownerId && !displayNone?
           <button
           id="post-review-btn"
-          style={{display: displayNone ? 'none': 'flex'}}
           >
             <OpenModalMenuItem
             itemText="Post a review"
@@ -123,7 +124,7 @@ export const SpotDetails = () => {
                 Object.values(spot.reviews).map(review =>
                   <SpotReviewList review={review} key={review.id} />
                 )
-                : <p>Be the first to post a Review!</p>
+                : spot.ownerId == sessionUser.id ? null : <p>Be the first to post a Review!</p>
                 }
               </ul>
             </div>
