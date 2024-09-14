@@ -3,7 +3,7 @@ import { useDispatch } from 'react-redux';
 import './PostReviewModal.css';
 import { IoMdStarOutline } from "react-icons/io";
 import { IoMdStar } from 'react-icons/io';
-import { addAReview, getSpotById } from '../../store/spots';
+import { addAReview } from '../../store/spots';
 import { useModal } from '../../context/Modal';
 
 export const PostReviewModal = ({spotId, setDisplayNone}) => {
@@ -14,7 +14,7 @@ export const PostReviewModal = ({spotId, setDisplayNone}) => {
   const [clicked, setClicked] = useState(false);
   const {closeModal} = useModal();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setErrors({});
     const newReview =
@@ -22,10 +22,11 @@ export const PostReviewModal = ({spotId, setDisplayNone}) => {
       review,
       stars: rating
     }
-    dispatch(addAReview(spotId, newReview))
-    .then(dispatch(getSpotById(spotId)))
-    .then(setDisplayNone(true))
-    .then(closeModal)
+    await dispatch(addAReview(spotId, newReview))
+    .then(() => {
+      setDisplayNone(true);
+      closeModal();
+    })
     .catch(async (res) => {
       const data = await res.json();
       if (data && data.errors) {
