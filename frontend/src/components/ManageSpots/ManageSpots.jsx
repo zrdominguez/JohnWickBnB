@@ -3,7 +3,7 @@ import './ManageSpots.css'
 import { useDispatch, useSelector } from 'react-redux'
 import { useEffect } from 'react'
 import { getUserSpots, removeSpot, selectCurrentUserSpots } from '../../store/spots'
-import { NavLink } from 'react-router-dom'
+import { NavLink} from 'react-router-dom'
 import OpenModalMenuItem from '../Navigation/OpenModalMenuItem'
 import { useModal } from '../../context/Modal'
 export const ManageSpots = () => {
@@ -16,8 +16,6 @@ export const ManageSpots = () => {
   },[dispatch])
 
   const handleDelete = spotId => {
-
-    console.log(spotId);
     dispatch(removeSpot(spotId)).then(closeModal)
     .catch(err => console.error(err));
   }

@@ -38,7 +38,6 @@ export const SpotDetails = () => {
 
   if(!spot || !spot.Owner || !spot.SpotImages) return <h3>Loading...</h3>
 
-  console.log('display', displayNone)
   const {
     name,
     city,

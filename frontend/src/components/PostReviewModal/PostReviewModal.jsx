@@ -12,9 +12,7 @@ export const PostReviewModal = ({spotId, setDisplayNone}) => {
   const [rating, setRating] = useState(0);
   const [errors, setErrors] = useState({});
   const [clicked, setClicked] = useState(false);
-  const {closeModal} = useModal()
-
-  console.log(rating)
+  const {closeModal} = useModal();
 
   const handleSubmit = (e) => {
     e.preventDefault();
