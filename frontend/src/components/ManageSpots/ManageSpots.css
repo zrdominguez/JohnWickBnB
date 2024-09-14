@@ -7,9 +7,6 @@
   box-shadow: 1px 3px;
 }
 
-.card-container{
-  width: 100%;
-}
 
 .update-delete{
   display: flex;
@@ -17,7 +14,16 @@
   margin-top: 5px;
 }
 
-.flex-container {
+.card-container{
+  max-width: 25%;
+  flex: 1 1 20%;
+}
+
+.card-container .flex-item{
+  max-width: 100%;
+}
+
+.manage-container {
   display: flex;
   flex-wrap: wrap;
   gap: 0.75rem;
@@ -33,6 +39,14 @@
 #modal-content h2{
   margin-top: 0;
   margin-bottom: 10px;
+  text-align: center;
+}
+
+.confirm-delete-modal{
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 
 #yes-button{
@@ -40,7 +54,7 @@
   color: white;
   width: 100%;
   padding: 0;
-  height: 100%;
+  height: 1.5rem;
   border: 0;
   border-radius: 3px;
   box-shadow: 1px 3px black;
@@ -51,8 +65,13 @@
   color: white;
   width: 100%;
   padding: 0;
-  height: 100%;
+  height: 1.5rem;
   border: 0;
   border-radius: 3px;
   box-shadow: 1px 3px black;
+}
+
+.confirm-delete-modal button:hover{
+  font-weight: bold;
+  transform: scale(1.01);
 }

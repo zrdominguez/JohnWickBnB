@@ -47,8 +47,8 @@
   gap: 10px
 }
 
-.describe-text-area{
-
+.describe-text-area textarea{
+  height: 5rem
 }
 
 .comma{

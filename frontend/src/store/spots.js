@@ -69,6 +69,7 @@ export const deleteSpot = spotId => (
   }
 )
 
+
 //thunk action creators
 
 export const getSpots = () => async dispatch => {
@@ -157,6 +158,22 @@ export const removeSpot = spotId => async dispatch => {
   )
 
   if(res.ok) dispatch(deleteSpot(spotId))
+}
+
+export const editASpot = spot => async dispatch => {
+  const editRes = await csrfFetch(`/api/spots/${spot.id}`,
+    {
+      method: 'PUT',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify(spot)
+    }
+  )
+  const editSpot = await editRes.json()
+  if(editRes.ok){
+    const getRes = await csrfFetch(`/api/spots/${spot.id}`);
+    const updatedSpot = await getRes.json();
+    dispatch(loadSpotById(updatedSpot))
+  }return editSpot;
 }
 
 //selectors
