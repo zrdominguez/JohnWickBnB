@@ -7,7 +7,7 @@ const Months =
 
 export const SpotReviewList = ({review}) => {
 
-  if(!review) return <div>Loading</div>
+  if(!review || !review.User) return <div>Loading</div>
 
   const {User: {firstName}, createdAt} = review;
   const date = new Date(createdAt);
