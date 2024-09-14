@@ -5,10 +5,11 @@ import './SpotDetails.css';
 import { IoMdStar } from "react-icons/io";
 import { IoMdStarHalf } from "react-icons/io";
 import SpotReviewList from "../../components/SpotReviewList";
-import { selectUserReviews } from "../../store/reviews";
+import { selectUserReviews, removeReview, getUserReviews } from "../../store/reviews";
 import OpenModalMenuItem from "../Navigation/OpenModalMenuItem";
 import { PostReviewModal } from "../PostReviewModal/PostReviewModal";
 import { useParams } from "react-router-dom";
+import { useModal } from "../../context/Modal";
 
 export const SpotDetails = () => {
   const {spotId} = useParams();
@@ -17,6 +18,7 @@ export const SpotDetails = () => {
   const sessionUser = useSelector(state => state.session.user);
   const reviews = useSelector(selectUserReviews);
   const [displayNone, setDisplayNone] = useState(false);
+  const {closeModal} = useModal();
 
 
 
@@ -32,6 +34,11 @@ export const SpotDetails = () => {
         if(spotId == review.spotId) setDisplayNone(true);
       })
   }, [dispatch, spotId, spot?.numReviews, reviews])
+
+  const handleDelete = reviewId =>{
+    dispatch(removeReview(reviewId))
+    dispatch(getUserReviews())
+  }
 
   if(!spot || !spot.Owner || !spot.SpotImages) return <h3>Loading...</h3>
 
@@ -118,7 +125,31 @@ export const SpotDetails = () => {
                 {
                 numReviews > 0  && spot.reviews?
                 Object.values(spot.reviews).map(review =>
-                  <SpotReviewList review={review} key={review.id} />
+                <li key={review.id}>
+                  <SpotReviewList review={review} />
+                  {review.User.id == sessionUser.id &&
+                  <span className="update-delete">
+                    <button>Update</button>
+                    <button>
+                    <OpenModalMenuItem
+                    itemText={'Delete'}
+                    modalComponent={
+                    (
+                    <div className='confirm-delete-modal'>
+                      <h2>Confirm Delete</h2>
+                      <p>Are you sure you want to delete this review?</p>
+                      <button id='yes-button' onClick={()=> {
+                        handleDelete(review.id)
+                        closeModal();
+                        }
+                      }>Yes (Delete Review)</button>
+                      <button id='no-button' onClick={closeModal}>No (Keep Review)</button>
+                    </div>
+                    )}
+                    />
+                    </button>
+                  </span>}
+                </li>
                 )
                 : spot.ownerId == sessionUser.id ? null : <p>Be the first to post a Review!</p>
                 }

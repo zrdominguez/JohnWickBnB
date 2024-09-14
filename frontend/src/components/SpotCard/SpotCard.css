@@ -13,10 +13,9 @@
   padding: 10px;
   height: fit-content;
   position: relative;
-  max-width: 25%;
+  max-width: 23.2%;
   flex: 1 1 20%;
   max-height: 100%;
-  min-height: 100;
 }
 
 .flex-item img{

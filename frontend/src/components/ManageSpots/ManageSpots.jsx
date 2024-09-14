@@ -48,7 +48,7 @@ export const ManageSpots = () => {
                     <div className='confirm-delete-modal'>
                       <h2>Confirm Delete</h2>
                       <p>Are you sure you want to remove this spot from the listings?</p>
-                      <button id='yes-button' onClick={()=> handleDelete(spot.id)}>Yes (Delete spot)</button>
+                      <button id='yes-button' onClick={()=> handleDelete(spot.id)}>Yes (Delete Spot)</button>
                       <button id='no-button' onClick={closeModal}>No (Keep Spot)</button>
                     </div>
                   )}

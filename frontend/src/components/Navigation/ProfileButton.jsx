@@ -68,6 +68,16 @@ export const ProfileButton = ({ user }) => {
               }
             }
             >Manage Spots</li>
+            <li
+              onClick={() => navigate('/reviews/current')}
+              style={
+                {
+                  borderBottom: '1px solid black',
+                  cursor: 'pointer',
+                }
+              }
+            >Manage Reviews
+            </li>
             <li className='logout-btn'>
               <button onClick={logout}>Log Out</button>
             </li>

@@ -5,7 +5,7 @@ const Months =
   'November', 'December'
 ]
 
-export const SpotReviewList = ({review}) => {
+export const SpotReviewList = ({review, spotName}) => {
 
   if(!review || !review.User) return <div>Loading</div>
 
@@ -16,10 +16,10 @@ export const SpotReviewList = ({review}) => {
 
 
   return(
-    <li>
-      <h4>{firstName}</h4>
+    <>
+      <h4>{spotName ? spotName : firstName}</h4>
       <h4 className="date">{`${month} ${year}`}</h4>
       <article>{review.review}</article>
-    </li>
+    </>
   );
 }

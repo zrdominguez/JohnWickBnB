@@ -6,15 +6,3 @@
   justify-content: flex-start;
   max-width: 100%;
 }
-
-/* @media screen and (max-width: 768px) {
-  .flex-item {
-    flex-basis: calc(50% - 20px);
-  }
-}
-
-@media screen and (max-width: 480px) {
-  .flex-item {
-    flex-basis: 100%;
-  }
-} */
