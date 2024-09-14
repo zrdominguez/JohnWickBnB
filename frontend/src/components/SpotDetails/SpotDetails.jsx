@@ -27,7 +27,7 @@ export const SpotDetails = () => {
   }, [dispatch, spotId])
 
   useEffect( () => {
-    if(spot?.numReviews){
+    if(spot?.numReviews && reviews?.length > 0){
       dispatch(getSpotReviews(spotId));
       reviews.forEach(review => {
         if(spotId == review.spotId) setDisplayNone(true);
