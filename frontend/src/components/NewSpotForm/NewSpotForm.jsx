@@ -77,7 +77,6 @@ export const NewSpotForm = () => {
     }
     if(spotResponse.errors || !checkPreview) return
     else{
-      console.log(spotResponse)
       const allImages = [previewImg, ...otherImages]
 
       allImages.forEach(async (image, index) => {
