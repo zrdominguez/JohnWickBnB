@@ -24,16 +24,13 @@ export const SpotDetails = () => {
     if(spotId) {
       dispatch(getSpotById(spotId));
     }
-  }, [dispatch, spotId])
+  }, [dispatch, spotId, reviews])
 
   useEffect( () => {
-    if(spot?.numReviews && reviews?.length > 0){
       dispatch(getSpotReviews(spotId));
       reviews.forEach(review => {
         if(spotId == review.spotId) setDisplayNone(true);
       })
-    }
-
   }, [dispatch, spotId, spot?.numReviews, reviews])
 
   if(!spot || !spot.Owner || !spot.SpotImages) return <h3>Loading...</h3>
@@ -119,7 +116,7 @@ export const SpotDetails = () => {
             <div className="review-container">
               <ul>
                 {
-                numReviews > 0 ?
+                numReviews > 0  && spot.reviews?
                 Object.values(spot.reviews).map(review =>
                   <SpotReviewList review={review} key={review.id} />
                 )
