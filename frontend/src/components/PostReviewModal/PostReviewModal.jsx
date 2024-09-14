@@ -5,14 +5,16 @@ import { IoMdStarOutline } from "react-icons/io";
 import { IoMdStar } from 'react-icons/io';
 import { addAReview, getSpotById, getSpotReviews } from '../../store/spots';
 import { useModal } from '../../context/Modal';
-import { getUserReviews } from '../../store/reviews';
 
 export const PostReviewModal = ({spotId, setDisplayNone}) => {
   const dispatch = useDispatch();
   const [review, setReview] = useState("");
   const [rating, setRating] = useState(0);
   const [errors, setErrors] = useState({});
+  const [clicked, setClicked] = useState(false);
   const {closeModal} = useModal()
+
+  console.log(rating)
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -60,11 +62,29 @@ export const PostReviewModal = ({spotId, setDisplayNone}) => {
         <div className='star-rating'>
           <div>
             {[...Array(5)].map((el, i) => (
-               <span key={i} onClick={() => setRating(i + 1)} style={{ cursor: 'pointer' }}>
+               <span
+               key={i}
+               onClick={() => {
+                setRating(i + 1)
+                setClicked(true)
+               }
+              }
+               style={{ cursor: 'pointer' }}
+               >
                {rating >= (i + 1) ? (
-                 <IoMdStar id={`full-star${i + 1}`} /> // Render filled star if rating is high enough
+                 <IoMdStar
+                 id={`full-star${i + 1}`}
+                 onMouseLeave={() => {
+                  if(!clicked){
+                    setRating(i)
+                  }setClicked(false)
+                 }}
+                 />
                ) : (
-                 <IoMdStarOutline id={`star${i + 1}`} /> // Render outline star otherwise
+                 <IoMdStarOutline
+                  id={`star${i + 1}`}
+                  onMouseOver={()=> setRating(i + 1)}
+                  />
                )}
              </span>
             ))}
