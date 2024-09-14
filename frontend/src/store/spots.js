@@ -203,7 +203,6 @@ const spotReducer = (state = initialState, action) => {
     }
     case LOAD_REVIEWS_OF_SPOT: {
       const reviews = action.reviews;
-      console.log(reviews)
       const spotId = reviews[0].spotId
       const allReviews = {}
       if(reviews.length > 0){
