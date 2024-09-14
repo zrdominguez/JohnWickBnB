@@ -204,24 +204,25 @@ const spotReducer = (state = initialState, action) => {
     case LOAD_REVIEWS_OF_SPOT: {
       const reviews = action.reviews;
       console.log(reviews)
-      const spotId = reviews[0].spotId
       const allReviews = {}
+      let spotId;
       if(reviews.length > 0){
+        spotId = reviews[0].spotId
         reviews.forEach(review => {
           allReviews[review.id] = review
         })
-      }
-
-      return {
-        ...state,
-        allSpots: {
-          ...state.allSpots,
-          [spotId]: {
-            ...state.allSpots[spotId],
-            reviews: allReviews,
+        return {
+          ...state,
+          allSpots: {
+            ...state.allSpots,
+            [spotId]: {
+              ...state.allSpots[spotId],
+              reviews: allReviews,
+            }
           }
         }
       }
+      return {...state}
     }
     case CREATE_SPOT:{
       const spotId = action.spot.id;
