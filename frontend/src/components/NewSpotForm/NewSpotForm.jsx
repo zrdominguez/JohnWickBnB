@@ -24,11 +24,9 @@ export const NewSpotForm = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  console.log(errors)
-
   const submitHandler = async (e) => {
     e.preventDefault();
-
+    setErrors({});
     const newSpot = {
       address,
       city,
@@ -50,9 +48,7 @@ export const NewSpotForm = () => {
 
     const checkPreview = await checkImage(previewImg)
     .then(data => data)
-    .catch(err => err)
-
-    if(!checkPreview) setErrors({preview: 'Preview image is required.'});
+    .catch(err => err);
 
     if(otherImages.length){
       for(const [index, image] of otherImages.entries()){
@@ -75,19 +71,23 @@ export const NewSpotForm = () => {
 
     if(spotResponse.errors){
       setErrors(currentErr => currentErr = {...currentErr, ...spotResponse.errors})
-    }else{
+    }
+    if(!checkPreview) {
+      setErrors({preview: 'Preview image is required.'});
+    }
+    if(spotResponse.errors || !checkPreview) return
+    else{
+      console.log(spotResponse)
       const allImages = [previewImg, ...otherImages]
+
       allImages.forEach(async (image, index) => {
         const obj = {url: image, preview: false}
         if(!index) obj.preview = true;
         dispatch(addSpotImage(spotResponse.id, obj))
+        .catch(err => console.error(err))
       })
       navigate(`/spots/${spotResponse.id}`)
     }
-
-
-      //navigate(`/spots/${response.id}`)
-    //}
   }
 
 

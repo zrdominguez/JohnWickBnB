@@ -3,7 +3,7 @@ import { useDispatch } from 'react-redux';
 import './PostReviewModal.css';
 import { IoMdStarOutline } from "react-icons/io";
 import { IoMdStar } from 'react-icons/io';
-import { addAReview, getSpotReviews } from '../../store/spots';
+import { addAReview, getSpotById, getSpotReviews } from '../../store/spots';
 import { useModal } from '../../context/Modal';
 
 export const PostReviewModal = ({spotId, setDisplayNone}) => {
@@ -11,17 +11,23 @@ export const PostReviewModal = ({spotId, setDisplayNone}) => {
   const [review, setReview] = useState("");
   const [rating, setRating] = useState(0);
   const [errors, setErrors] = useState({});
+  const [clicked, setClicked] = useState(false);
   const {closeModal} = useModal()
+
+  console.log(rating)
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    setErrors({});
     const newReview =
     {
       review,
       stars: rating
     }
     dispatch(addAReview(spotId, newReview))
-    .then(dispatch(getSpotReviews(spotId))).then(setDisplayNone(true)).then(closeModal)
+    .then(dispatch(getSpotById(spotId)))
+    .then(setDisplayNone(true))
+    .then(closeModal)
     .catch(async (res) => {
       const data = await res.json();
       if (data && data.errors) {
@@ -56,18 +62,40 @@ export const PostReviewModal = ({spotId, setDisplayNone}) => {
         <div className='star-rating'>
           <div>
             {[...Array(5)].map((el, i) => (
-               <span key={i} onClick={() => setRating(i + 1)} style={{ cursor: 'pointer' }}>
+               <span
+               key={i}
+               onClick={() => {
+                setRating(i + 1)
+                setClicked(true)
+               }
+              }
+               style={{ cursor: 'pointer' }}
+               >
                {rating >= (i + 1) ? (
-                 <IoMdStar id={`full-star${i + 1}`} /> // Render filled star if rating is high enough
+                 <IoMdStar
+                 id={`full-star${i + 1}`}
+                 onMouseLeave={() => {
+                  if(!clicked){
+                    setRating(i)
+                  }setClicked(false)
+                 }}
+                 />
                ) : (
-                 <IoMdStarOutline id={`star${i + 1}`} /> // Render outline star otherwise
+                 <IoMdStarOutline
+                  id={`star${i + 1}`}
+                  onMouseOver={()=> setRating(i + 1)}
+                  />
                )}
              </span>
             ))}
           </div>
           <p>Stars</p>
         </div>
-        <button type="submit" id='submit-review-btn'>Submit Your Review</button>
+        <button
+        type="submit"
+        id='submit-review-btn'
+        disabled={review.length < 10}
+        >Submit Your Review</button>
       </form>
     </>
   );
