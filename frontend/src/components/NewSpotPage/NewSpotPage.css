@@ -101,6 +101,6 @@ input {
 
 #submit-form-btn{
   margin-top: 20px;
-  background-color: #c3ba6d;
-  box-shadow: 1px 3px;
+  background-color: #fe3bf1;
+  border-radius: 10px;
 }
