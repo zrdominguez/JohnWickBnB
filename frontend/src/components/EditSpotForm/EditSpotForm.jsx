@@ -1,26 +1,30 @@
 import { useState } from "react"
-import { useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
-import { addASpot, addSpotImage } from "../../store/spots";
+import { useNavigate, useParams } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { editASpot, selectSpotById } from "../../store/spots";
 
 const IMAGE_FORMAT = ['png', 'jpg', 'jpeg'];
 
-export const NewSpotForm = () => {
+export const EditSpotForm = () => {
+  const {id} = useParams();
+  const spot = useSelector(state => selectSpotById(state, id));
+  const images = [...spot.SpotImages];
+
   const dispatch = useDispatch();
-  const [country, setCountry] = useState('');
-  const [state, setState] = useState('');
-  const [address, setAddress] = useState('');
-  const [city, setCity] = useState('');
-  const [lat, setLat] = useState('');
-  const [lng, setLng] = useState('');
-  const [name, setName] = useState('');
-  const [description, setDescription] = useState('');
-  const [price, setPrice] = useState('');
-  const [previewImg, setPreviewImg] = useState('');
-  const [img1, setImg1] = useState('')
-  const [img2, setImg2] = useState('')
-  const [img3, setImg3] = useState('')
-  const [img4, setImg4] = useState('')
+  const [country, setCountry] = useState(spot.country);
+  const [state, setState] = useState(spot.state);
+  const [address, setAddress] = useState(spot.address);
+  const [city, setCity] = useState(spot.city);
+  const [lat, setLat] = useState(spot.lat);
+  const [lng, setLng] = useState(spot.lng);
+  const [name, setName] = useState(spot.name);
+  const [description, setDescription] = useState(spot.description);
+  const [price, setPrice] = useState(spot.price);
+  const [previewImg, setPreviewImg] = useState(images.find(image => image.preview).url);
+  const [img1, setImg1] = useState(images.filter(image => !image.preview)[0]?.url || '')
+  const [img2, setImg2] = useState(images.filter(image => !image.preview)[1]?.url || '')
+  const [img3, setImg3] = useState(images.filter(image => !image.preview)[2]?.url || '')
+  const [img4, setImg4] = useState(images.filter(image => !image.preview)[3]?.url || '')
   const [errors, setErrors] = useState({})
   const navigate = useNavigate();
 
@@ -28,7 +32,8 @@ export const NewSpotForm = () => {
   const submitHandler = async (e) => {
     e.preventDefault();
     setErrors({});
-    const newSpot = {
+    const editSpot = {
+      id,
       address,
       city,
       state,
@@ -45,7 +50,7 @@ export const NewSpotForm = () => {
      img2,
      img3,
      img4
-    ].filter(image => image.length > 2)
+    ]
 
     const checkPreview = await checkImage(previewImg)
     .then(data => data)
@@ -65,7 +70,7 @@ export const NewSpotForm = () => {
       }
     }
 
-    const spotResponse = await dispatch(addASpot(newSpot))
+    const spotResponse = await dispatch(editASpot(editSpot))
     .then(data => data)
     .catch(err => err && typeof err.json == 'function' ? err.json() : err);
 
@@ -78,15 +83,7 @@ export const NewSpotForm = () => {
     }
     if(spotResponse.errors || !checkPreview) return
     else{
-      const allImages = [previewImg, ...otherImages]
-
-      allImages.forEach(async (image, index) => {
-        const obj = {url: image, preview: false}
-        if(!index) obj.preview = true;
-        dispatch(addSpotImage(spotResponse.id, obj))
-        .catch(err => console.error(err))
-      })
-      navigate(`/spots/${spotResponse.id}`)
+      navigate(`/spots/${id}`)
     }
   }
 

@@ -58,7 +58,7 @@ export const LoginFormModal = () => {
           />
         </label>
         {errors.credential && (
-          <p>{errors.credential}</p>
+          <p style={{color: 'red'}}>{errors.credential}</p>
         )}
         <button
         type="submit" className='login-button'
