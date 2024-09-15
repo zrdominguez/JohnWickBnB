@@ -273,6 +273,7 @@ export const NewSpotForm = () => {
       <button
       type="submit"
       id="submit-form-btn"
+      disabled={description.length < 30}
       >
         Create Spot
       </button>
