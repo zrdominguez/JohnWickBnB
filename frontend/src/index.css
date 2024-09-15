@@ -1,5 +1,6 @@
 /* TODO: Add sitewide styles */
 h1, h2, h3, h4, h5{
+  font-family: sans-serif;
   font-weight: bold;
 }
 
@@ -17,10 +18,11 @@ main{
 body{
   display: flex;
   flex-direction: column;
-  background: linear-gradient(to bottom, #fb3bf2, #6345fb,#032680);
+  /* background-color: #032680; */
+  background: linear-gradient(to bottom, #cfebff, #032680);
   background-repeat: no-repeat;
   background-size: cover;
-  min-height: 100vh; /* Ensures the root div is at least as tall as the viewport */
+  min-height: 100vh;
 }
 
 #root{

@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import './SpotCard.css'
 import { IoMdStar } from "react-icons/io";
 import { IoMdStarHalf } from "react-icons/io";
+import { Tooltip } from './Tooltip';
 
 export const SpotCard = ({spot: {
   id,
@@ -10,9 +11,11 @@ export const SpotCard = ({spot: {
   state,
   city,
   avgRating,
-  price
+  price,
+  name
 } }) =>{
-  const [loaded, setLoaded] = useState(false)
+  const [loaded, setLoaded] = useState(false);
+  const [showTooltip, setShowTooltip] = useState(false);
   const navigate = useNavigate();
 
   const icon = avgRating >= 4 || avgRating == 0 ? <IoMdStar /> : <IoMdStarHalf />
@@ -33,13 +36,17 @@ export const SpotCard = ({spot: {
       <div className='image-container'>
         {loaded || <h2 onClick={handleSpotClick} style={{cursor:'pointer'}}>Loading...</h2>}
         <img
+        className={id}
         style={loaded ? {} : {display:'none'}}
         src={previewImage}
         alt="Preview Image"
+        onMouseEnter={()=> setShowTooltip(true)}
+        onMouseOut={() => setShowTooltip(false)}
         onError={handleError}
         onClick={handleSpotClick}
         onLoad={()=> setLoaded(true)}
         />
+        {showTooltip && <Tooltip name={name} />}
       </div>
       <ul>
         <li

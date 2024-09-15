@@ -87,9 +87,17 @@ export const SpotDetails = () => {
             <ul>
               <li className="price-review">
                 <h3>{`$${price} night`}</h3>
-                <p>{icon}{numReviews > 0 ?
-                `${avgStarRating.toFixed(1)} - ${numReviews} ${numReviews > 1 ? 'reviews' : 'review'}` : 'New'}
-                </p>
+                <div id="rating-icon-reviews">
+                  <p>{icon}</p>
+                  {numReviews > 0 ?
+                  <span>
+                    <p>{avgStarRating.toFixed(1)}</p>&nbsp;
+                    <p
+                    style={{marginBottom: '8px'}}
+                    >.</p>&nbsp;
+                    <p>{numReviews}&nbsp;{numReviews > 1 ? 'reviews' : 'review'}</p>
+                  </span> : 'New'}
+                </div>
               </li>
               <li>
                 <button
@@ -102,9 +110,18 @@ export const SpotDetails = () => {
         </section>
       </div>
       <div className="reviews">
-        <h3>{icon}&nbsp;{numReviews > 0 ?
-          `${avgStarRating.toFixed(1)} - ${numReviews} ${numReviews > 1 ? 'reviews' : 'review'}` : 'New'}
-        </h3>
+        <div id="heading-review-count">
+          <h3>{icon}</h3>&nbsp;
+          {numReviews > 0 ?
+          <>
+            <h3>{avgStarRating.toFixed(1)}</h3>&nbsp;
+            <h3
+            style={{marginBottom: '8px'}}
+            >.</h3>&nbsp;
+            <h3>{numReviews} {numReviews > 1 ? 'reviews' : 'review'}</h3>
+          </> : 'New'
+          }
+        </div>
         {sessionUser && sessionUser.id != spot.ownerId && !displayNone?
           <button
           id="post-review-btn"
@@ -139,7 +156,8 @@ export const SpotDetails = () => {
                       <h2>Confirm Delete</h2>
                       <p>Are you sure you want to delete this review?</p>
                       <button id='yes-button' onClick={()=> {
-                        handleDelete(review.id)
+                        handleDelete(review.id);
+                        setDisplayNone(false);
                         closeModal();
                         }
                       }>Yes (Delete Review)</button>
