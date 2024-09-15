@@ -23,7 +23,7 @@ module.exports = {
       {
         imageableType: 'spot',
         imageableId: 1,
-        url: 'https://plus.unsplash.com/premium_photo-1685133855289-c03dbdf78fee?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D', // Preview image
+        url: 'https://images.pexels.com/photos/872597/pexels-photo-872597.jpeg',
         preview: true,
         createdAt: new Date(),
         updatedAt: new Date()
@@ -31,7 +31,7 @@ module.exports = {
       {
         imageableType: 'spot',
         imageableId: 1,
-        url: 'https://images.pexels.com/photos/27543244/pexels-photo-27543244/free-photo-of-a-bedroom-with-a-large-window-and-a-bed.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2', // Amenity: Sleek living room
+        url: 'https://images.pexels.com/photos/18123903/pexels-photo-18123903/free-photo-of-interior-of-old-rustic-bedroom-in-wooden-house.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
         preview: false,
         createdAt: new Date(),
         updatedAt: new Date()
@@ -39,7 +39,7 @@ module.exports = {
       {
         imageableType: 'spot',
         imageableId: 1,
-        url: 'https://images.unsplash.com/photo-1533423996375-f914ab160932?q=80&w=1950&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D', // Amenity: High-end kitchen
+        url: 'https://images.pexels.com/photos/5490204/pexels-photo-5490204.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
         preview: false,
         createdAt: new Date(),
         updatedAt: new Date()
@@ -47,7 +47,7 @@ module.exports = {
       {
         imageableType: 'spot',
         imageableId: 1,
-        url: 'https://images.unsplash.com/photo-1567002260451-50e05a6b031a?q=80&w=1887&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D', // Amenity: Luxurious bathroom
+        url: 'https://i.pinimg.com/564x/77/70/27/777027653eb7f0006f15e4eaed67d5ad.jpg',
         preview: false,
         createdAt: new Date(),
         updatedAt: new Date()
@@ -55,7 +55,7 @@ module.exports = {
       {
         imageableType: 'spot',
         imageableId: 1,
-        url: 'https://images.pexels.com/photos/4906520/pexels-photo-4906520.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2', // Amenity: Dark, cozy bedroom
+        url: 'https://i.pinimg.com/564x/ab/bd/1a/abbd1a8ac7a3c5638387f0adad3c0a14.jpg',
         preview: false,
         createdAt: new Date(),
         updatedAt: new Date()
@@ -63,15 +63,39 @@ module.exports = {
       {
         imageableType: 'spot',
         imageableId: 2,
-        url: 'https://plus.unsplash.com/premium_photo-1694475731860-1fe1cb7a1897?q=80&w=2067&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D', // Preview image
+        url: 'https://i.pinimg.com/originals/68/57/a0/6857a04eaa822cfea23e01d08d7e46d8.jpg',
         preview: true,
         createdAt: new Date(),
         updatedAt: new Date()
       },
       {
         imageableType: 'spot',
+        imageableId: 2,
+        url: 'https://i.pinimg.com/736x/16/9d/14/169d1443e6344385824ac65a8713afd1.jpg',
+        preview: false,
+        createdAt: new Date(),
+        updatedAt: new Date()
+      },
+      {
+        imageableType: 'spot',
+        imageableId: 2,
+        url: 'https://i.pinimg.com/736x/1c/bd/56/1cbd56c1effa437ee4973186aab14d88.jpg',
+        preview: false,
+        createdAt: new Date(),
+        updatedAt: new Date()
+      },
+      {
+        imageableType: 'spot',
+        imageableId: 2,
+        url: 'https://i.pinimg.com/564x/25/02/c2/2502c2f906a593ca27c8e8babfcdab1c.jpg',
+        preview: false,
+        createdAt: new Date(),
+        updatedAt: new Date()
+      },
+      {
+        imageableType: 'spot',
         imageableId: 3,
-        url: 'https://www.refinery29.com/images/11529234.jpg?format=webp&width=1090&height=1308&quality=85&crop=5%3A6', // Preview image
+        url: 'https://i.pinimg.com/564x/fe/18/f5/fe18f54d361b1c58ccc45055679fdbe6.jpg',
         preview: true,
         createdAt: new Date(),
         updatedAt: new Date()

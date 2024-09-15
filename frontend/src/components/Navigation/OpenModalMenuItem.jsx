@@ -17,7 +17,7 @@ function OpenModalMenuItem({
   };
 
   return (
-    <li onClick={onClick} style={{display: 'flex', justifyContent: 'space-between', flexDirection: 'row', cursor: 'pointer'}}>
+    <li onClick={onClick} style={{display: 'flex', justifyContent: 'flex-start', flexDirection: 'row', cursor: 'pointer'}}>
       {itemIcon && itemIcon} {itemText}
     </li>
   );

@@ -68,6 +68,11 @@
   margin: 10px;
 }
 
+.new-spot-form textarea::placeholder, .new-spot-form input::placeholder{
+  opacity: .5;
+  color: gray;
+}
+
 .new-spot-form section{
   text-align: left;
   border-bottom: 2px black solid;

@@ -8,8 +8,8 @@ nav{
 header{
   width: 100%;
   height: 70px;
-  border-bottom: 2px solid lightgray;
-  background-color: #020a15;
+  border-bottom: 2px solid lightblue;
+  background-color: #ebf5f0;
 }
 
 nav ul{
@@ -27,11 +27,11 @@ nav ul{
   align-items: flex-start;
   padding:5px;
   margin-top: 1rem;
-  background-color: #4f768e;
-  box-shadow: 0 0 0 1px #c3ba6d;
+  background-color: #020a15;
+  box-shadow: 0 0 0 1px black;
   border-radius: 2px;
-  position: absolute;                 /* Position absolutely relative to button */
-  top: 2.75em;              /* Place below the button with some spacing */
+  position: absolute;
+  top: 2.50em;
   right: 39px;
   z-index: 10;
   width: fit-content;
@@ -43,7 +43,7 @@ nav ul{
 }
 
 .profile-dropdown li{
-  color: #1a42a0;
+  color: #ebf5f0;
   float: left;
   border-top: 1px;
   border-bottom: 1px;
@@ -55,17 +55,17 @@ nav ul{
   display: flex;
   justify-content: space-evenly;
   border-radius: 8px;
-  border-style: solid;
-  border-color:white;
+  width: 4rem;
   padding: 0;
   background-color: #020a15;
   position: relative;
   cursor: pointer;
+  border: 2px solid #fe3bf1
 }
 
 .home-link{
   text-decoration: none;
-  color: #c3ba6d;
+  color: #fe3bf1;
   display: flex;
   align-items: center;
   font-weight: bold;
@@ -78,9 +78,10 @@ nav ul{
 }
 
 .logout-btn button{
-  border-radius: 2px;
-  box-shadow: 1px 3px;
-  background-color: #c3ba6d;
+  margin: 2px 0 2px 0;
+  border-radius: 10px;
+  box-shadow: 1px 3px gray;
+  background-color: #ebf5f0;
 }
 
 .logout-btn:hover{

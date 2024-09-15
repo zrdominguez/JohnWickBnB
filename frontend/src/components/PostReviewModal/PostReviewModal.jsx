@@ -43,10 +43,10 @@ export const PostReviewModal = ({spotId, setDisplayNone}) => {
       >
         <h1>How Was Your Stay?</h1>
         {errors.review && (
-          <p>{errors.review}</p>
+          <p style={{color:'red'}}>{errors.review}</p>
         )}
         {errors.stars && (
-          <p>{errors.stars}</p>
+          <p style={{color:'red'}}>{errors.stars}</p>
         )}
 
         <textarea

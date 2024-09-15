@@ -50,8 +50,8 @@ export const ProfileButton = ({ user }) => {
   return (
     <>
       <button onClick={toggleMenu} className='profile-button'>
-        <GiHamburgerMenu className='hamburger-icon' size={20} style={{color: '#c3ba6d'}}/>
-        <FaUserCircle className='profile-icon' size={20}  style={{color: '#c3ba6d'}}/>
+        <GiHamburgerMenu className='hamburger-icon' size={20} style={{color: '#ebf5f0'}}/>
+        <FaUserCircle className='profile-icon' size={20}  style={{color: '#ebf5f0'}}/>
       </button>
       <ul className={ulClassName} ref={ulRef}>
         {user ? (
