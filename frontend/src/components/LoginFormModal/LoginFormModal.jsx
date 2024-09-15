@@ -37,7 +37,8 @@ export const LoginFormModal = () => {
 
   return (
     <>
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit}
+      className='login-form'>
         <h1 >Log In</h1>
         <label>
           <input
