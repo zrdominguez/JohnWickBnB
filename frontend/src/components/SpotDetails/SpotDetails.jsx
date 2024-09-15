@@ -96,7 +96,7 @@ export const SpotDetails = () => {
                     style={{marginBottom: '8px'}}
                     >.</p>&nbsp;
                     <p>{numReviews}&nbsp;{numReviews > 1 ? 'reviews' : 'review'}</p>
-                  </span> : 'New'}
+                  </span> : <p>&nbsp;New</p>}
                 </div>
               </li>
               <li>
@@ -119,7 +119,7 @@ export const SpotDetails = () => {
             style={{marginBottom: '8px'}}
             >.</h3>&nbsp;
             <h3>{numReviews} {numReviews > 1 ? 'reviews' : 'review'}</h3>
-          </> : 'New'
+          </> : <h3>New</h3>
           }
         </div>
         {sessionUser && sessionUser.id != spot.ownerId && !displayNone?
