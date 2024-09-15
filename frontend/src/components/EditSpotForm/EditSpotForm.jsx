@@ -21,10 +21,10 @@ export const EditSpotForm = () => {
   const [description, setDescription] = useState(spot.description);
   const [price, setPrice] = useState(spot.price);
   const [previewImg, setPreviewImg] = useState(images.find(image => image.preview).url);
-  const [img1, setImg1] = useState(images.filter(image => !image.preview)[0].url || '')
-  const [img2, setImg2] = useState(images.filter(image => !image.preview)[1].url || '')
-  const [img3, setImg3] = useState(images.filter(image => !image.preview)[2].url || '')
-  const [img4, setImg4] = useState(images.filter(image => !image.preview)[3].url || '')
+  const [img1, setImg1] = useState(images.filter(image => !image.preview)[0]?.url || '')
+  const [img2, setImg2] = useState(images.filter(image => !image.preview)[1]?.url || '')
+  const [img3, setImg3] = useState(images.filter(image => !image.preview)[2]?.url || '')
+  const [img4, setImg4] = useState(images.filter(image => !image.preview)[3]?.url || '')
   const [errors, setErrors] = useState({})
   const navigate = useNavigate();
 

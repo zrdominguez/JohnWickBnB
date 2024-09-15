@@ -127,7 +127,7 @@ export const SpotDetails = () => {
                 Object.values(spot.reviews).map(review =>
                 <li key={review.id}>
                   <SpotReviewList review={review} />
-                  {review.User.id == sessionUser.id &&
+                  {review.User.id == sessionUser?.id &&
                   <span className="update-delete">
                     <button>Update</button>
                     <button>
@@ -151,7 +151,7 @@ export const SpotDetails = () => {
                   </span>}
                 </li>
                 )
-                : spot.ownerId == sessionUser.id ? null : <p>Be the first to post a Review!</p>
+                : spot.ownerId == sessionUser?.id ? null : <p>Be the first to post a Review!</p>
                 }
               </ul>
             </div>
