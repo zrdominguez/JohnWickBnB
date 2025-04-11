@@ -6,6 +6,8 @@
 
 [db-schema](./images/schema.png)
 
+[Live Link](https://johnwickbnb.onrender.com)
+
 ## API Documentation
 
 ## USER AUTHENTICATION/AUTHORIZATION
